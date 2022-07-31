@@ -44,9 +44,9 @@
         - [x] Adding List of Permission per Role 
 
     - Sponsors Resource
-        - [x] Viewing Sponsors
-        - [x] Adding Sponsors
-        - [x] Delete Sponsor
-        - [x] Update Sponsor
-        - [x] Adding List of Scholar per Sponsor 
+        - [] Viewing Sponsors
+        - [] Adding Sponsors
+        - [] Delete Sponsor
+        - [] Update Sponsor
+        - [] Adding List of Scholar per Sponsor 
         
