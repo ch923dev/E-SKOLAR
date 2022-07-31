@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class SponsorCategory extends Model
 {
@@ -20,5 +21,9 @@ class SponsorCategory extends Model
      * @var bool
      */
     public $timestamps = false;
+    public function sponsors() : HasMany
+    {
+        return $this->hasMany(Sponsor::class);
+    }
 }
 
