@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Sponsor extends Model
 {
@@ -21,4 +22,8 @@ class Sponsor extends Model
      * @var bool
      */
     public $timestamps = false;
+
+    public function sponsor_category(): BelongsTo{
+        return $this->belongsTo(SponsorCategory::class);
+    }
 }

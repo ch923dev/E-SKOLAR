@@ -9,4 +9,6 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateSponsor extends CreateRecord
 {
     protected static string $resource = SponsorResource::class;
+    protected static bool $canCreateAnother = false;
+
 }

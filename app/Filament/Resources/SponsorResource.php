@@ -16,18 +16,20 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class SponsorResource extends Resource
 {
     protected static ?string $model = Sponsor::class;
+    protected static ?string $modelLabel = 'Sponsor';
+    protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
+    protected static ?string $navigationGroup = 'Sponsors Management';
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('sponsor_category_id')
                     ->required(),
+                Forms\Components\Select::make('sponsor_category_id')
+                    ->relationship('sponsor_category', 'name')
+                    ->required()
             ]);
     }
 
@@ -36,27 +38,34 @@ class SponsorResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('sponsor_category_id'),
+                Tables\Columns\TextColumn::make('sponsor_category.name')
+                    ->label('Category')
+                    ->limit(30),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ActionGroup::make(
+                    [
+                        Tables\Actions\ViewAction::make(),
+                        Tables\Actions\EditAction::make(),
+                        Tables\Actions\DeleteAction::make(),
+                    ]
+                ),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             //
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -65,5 +74,5 @@ class SponsorResource extends Resource
             'view' => Pages\ViewSponsor::route('/{record}'),
             'edit' => Pages\EditSponsor::route('/{record}/edit'),
         ];
-    }    
+    }
 }
