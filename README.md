@@ -15,7 +15,7 @@
   - run ``` composer update ```
   - rename ``` .env.example ``` file to ``` .env ```
   - configure ``` .env ``` file
-  - run ``` php artisan migrate ```
+  - run ``` php artisan migrate:fresh --seed ```
   - run ``` php artisan key:generate ```
   - run ``` php artisan serve ```
         
