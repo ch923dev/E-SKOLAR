@@ -43,10 +43,17 @@
         - [x] Adding List of Users per Role 
         - [x] Adding List of Permission per Role 
 
+    - Sponsor Categories Resource
+        - [x] Viewing Sponsor Categories
+        - [x] Adding Sponsor Categories 
+        - [x] Delete Sponsor Category
+        - [x] Update Sponsor Category
+        - [x] Adding List of Sponsors per Sponsor Category 
+
     - Sponsors Resource
-        - [ ] Viewing Sponsors
-        - [ ] Adding Sponsors
-        - [ ] Delete Sponsor
-        - [ ] Update Sponsor
+        - [x] Viewing Sponsors
+        - [x] Adding Sponsors
+        - [x] Delete Sponsor
+        - [x] Update Sponsor
         - [ ] Adding List of Scholar per Sponsor 
         
