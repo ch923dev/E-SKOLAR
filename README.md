@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/ch923dev/E-SKOLAR/master/public/logo.png" />
+<img src="https://lh6.googleusercontent.com/wae9TANcIMyuN-t-ljpSirem12jZEKq6X4SzP794vYCO6oyNfngciDxeSsqDo2yzmv4f7JjGvh_YkOdE-uHu=w3594-h2710" />
 
 # E-SKOLAR
 
