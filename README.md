@@ -18,3 +18,35 @@
   - run ``` php artisan migrate ```
   - run ``` php artisan key:generate ```
   - run ``` php artisan serve ```
+        
+- ##### Currently Working
+    - Users Resource
+        - [x] Viewing Users
+        - [x] Adding Users
+        - [x] Delete User
+        - [x] Update User
+        - [x] Adding List of Permission per User 
+    
+    - Permissions Resource
+        - [x] Viewing Permissions
+        - [x] Adding Permissions
+        - [x] Delete Permission
+        - [x] Update Permission
+        - [x] Adding List of Users per Permission 
+        - [x] Adding List of Roles per Permission 
+    
+    - Roles Resource
+        - [x] Viewing Roles
+        - [x] Adding Roles
+        - [x] Delete Role
+        - [x] Update Role
+        - [x] Adding List of Users per Role 
+        - [x] Adding List of Permission per Role 
+
+    - Sponsors Resource
+        - [x] Viewing Sponsors
+        - [x] Adding Sponsors
+        - [x] Delete Sponsor
+        - [x] Update Sponsor
+        - [x] Adding List of Scholar per Sponsor 
+        
