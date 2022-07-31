@@ -72,7 +72,9 @@ class UserResource extends Resource
                         Forms\Components\FileUpload::make('file')
                             ->required()
                     ])
-                    ->hidden(auth()->user()->permissions->where('name', 'Manage Users')->first() ? true : false)
+                    ->hidden(function () {
+                        return auth()->user()->permissions->where('name', 'Manage Users')->first() ? false : true;
+                    })
                     ->button()
                     ->icon('heroicon-o-upload')
             ])
