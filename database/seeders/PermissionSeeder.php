@@ -18,6 +18,16 @@ class PermissionSeeder extends Seeder
         Permission::insert([
             [ 'name' => 'View Users' ],
             [ 'name' => 'Manage Users' ],
+            [ 'name' => 'View Roles' ],
+            [ 'name' => 'Manage Roles' ],
+            [ 'name' => 'View Permissions' ],
+            [ 'name' => 'Manage Permissions' ],
+            [ 'name' => 'View Sponsors' ],
+            [ 'name' => 'Manage Sponsors' ],
+            [ 'name' => 'View Sponsor Categories' ],
+            [ 'name' => 'Manage Sponsor Categories' ],
+            [ 'name' => 'View Scholars' ],
+            [ 'name' => 'Manage Scholars' ],
         ]);
     }
 }

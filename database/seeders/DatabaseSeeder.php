@@ -36,6 +36,7 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('admin123'),
             'role_id' => 1
         ]);
+        \App\Models\User::factory(10)->create();
 
     }
 }
