@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use AlperenErsoy\FilamentExport\Actions\FilamentExportHeaderAction;
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
+use App\Filament\Trait\Permits;
 use App\Imports\UsersImport;
 use App\Models\Permission;
 use App\Models\Role;
@@ -35,16 +36,17 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class UserResource extends Resource
 {
+    use Permits;
     protected static ?string $model = User::class;
     protected static bool $shouldRegisterNavigation = true;
     protected static ?string $modelLabel = 'User';
+    protected static ?string $pluralModelLabel = 'Users';
     protected static ?string $navigationGroup = 'Users Management';
     protected static ?int $navigationSort = 1;
     protected static ?string $navigationIcon = 'heroicon-s-user-group';
 
     public static function form(Form $form): Form
     {
-        // dd(auth()->user()->permission->first());
         return $form
             ->schema(static::getFormSchema());
     }
@@ -53,6 +55,8 @@ class UserResource extends Resource
         return $table
             ->headerActions([
                 FilamentExportHeaderAction::make('export')
+                    ->disablePreview()
+                    ->disableAdditionalColumns()
                     ->button(),
                 Action::make('import')
                     ->action(function (array $data) {
@@ -84,6 +88,11 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('role.name')->label('Role'),
+                Tables\Columns\TextColumn::make('contact_number')
+                    ->formatStateUsing(function ($state) {
+                        return $state ? '+' . $state : 'No Contact Number';
+                    })
+                    ->label('Role'),
             ])
             ->filters([
                 MultiSelectFilter::make('roles')
@@ -94,12 +103,16 @@ class UserResource extends Resource
                     ->label('Role')
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ViewAction::make()
+                    ->visible(static::can_view(static::$pluralModelLabel)),
+                Tables\Actions\EditAction::make()
+                    ->visible(static::can_manage(static::$pluralModelLabel)),
+                Tables\Actions\DeleteAction::make()
+                    ->visible(static::can_manage(static::$pluralModelLabel)),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                Tables\Actions\DeleteBulkAction::make()
+                    ->visible(static::can_manage(static::$pluralModelLabel)),
             ]);
     }
 
@@ -126,14 +139,15 @@ class UserResource extends Resource
                     Forms\Components\Select::make('role_id')
                         ->options(Role::whereNot('name', 'Organization')->whereNot('name', 'Scholar')->pluck('name', 'id'))
                         ->label('Type')
-                        ->reactive()
                         ->required(),
+                    Forms\Components\TextInput::make('contact_number')
+                        ->mask(fn (TextInput\Mask $mask) => $mask->pattern('+{639} 000 000 000'))
                 ]),
             ])->columns(2);
     }
     public static function getEloquentQuery(): Builder
     {
-        return static::getModel()::query()->whereNot('id', '=', auth()->user()->id)->whereNot('name', '');
+        return static::getModel()::query()->whereNot('id', '=', auth()->user()->id);
     }
     public static function getRelations(): array
     {
