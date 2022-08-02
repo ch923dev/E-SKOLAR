@@ -57,7 +57,4 @@ class User extends Authenticatable implements FilamentUser
     public function permissions(){
         return $this->hasManyThrough(Permission::class,PermissionRole::class,'role_id','id','role_id','permission_id');
     }
-    public function permissions2(){
-        return $this->belongsToMany(Permission::class,PermissionRole::class,'roles_id','permission_id');
-    }
 }
