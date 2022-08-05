@@ -35,4 +35,7 @@ class Scholar extends Model
     {
         return $this->belongsTo(Academic::class,'last_allowance_receive','id');
     }
+    public function college(){
+        return $this->hasOneThrough(College::class,Program::class,'id','id','program_id','college_id');
+    }
 }

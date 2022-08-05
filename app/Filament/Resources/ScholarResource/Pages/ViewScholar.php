@@ -4,17 +4,16 @@ namespace App\Filament\Resources\ScholarResource\Pages;
 
 use App\Filament\Resources\ScholarResource;
 use Filament\Pages\Actions;
-use Filament\Resources\Pages\EditRecord;
+use Filament\Resources\Pages\ViewRecord;
 
-class EditScholar extends EditRecord
+class ViewScholar extends ViewRecord
 {
     protected static string $resource = ScholarResource::class;
 
     protected function getActions(): array
     {
         return [
-            Actions\ViewAction::make(),
-            Actions\DeleteAction::make(),
+            Actions\EditAction::make(),
         ];
     }
 }

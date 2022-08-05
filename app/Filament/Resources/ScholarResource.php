@@ -3,6 +3,10 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ScholarResource\Pages;
+use App\Models\Academic;
+use Filament\Tables\Filters\Filter;
+use App\Models\College;
+use App\Models\Program;
 use App\Models\Scholar;
 use App\Models\Sponsor;
 use App\Models\User;
@@ -17,16 +21,20 @@ use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Closure;
 use Filament\Forms\Components\Fieldset;
+use Filament\Forms\Components\MultiSelect;
+use Filament\Tables\Filters\MultiSelectFilter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
-use Livewire\Component;
-use Livewire\Livewire;
+use Illuminate\Support\Str;
 
 class ScholarResource extends Resource
 {
     protected static ?string $model = Scholar::class;
     protected static ?string $modelLabel = 'Scholar';
     protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $pluralModelLabel = 'Scholars';
+    protected static ?string $navigationGroup = 'Scholars Management';
+    protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
     {
@@ -111,7 +119,7 @@ class ScholarResource extends Resource
                         Select::make('last_allowance_receive')
                             ->relationship('allowance_receive', 'year')
                             ->required()
-                            ->extraAttributes(['class'=>'space-y-2']),
+                            ->extraAttributes(['class' => 'space-y-2']),
                     ])->columnSpan(1),
                 ])->columns(3)
             );
@@ -121,16 +129,118 @@ class ScholarResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('user.email'),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime(),
+                Tables\Columns\TextColumn::make('id')
+                    ->searchable()
+                    ->toggleable()
+                    ->label('ID'),
+                Tables\Columns\TextColumn::make('user.name')
+                    ->searchable()
+                    ->toggleable()
+                    ->label('Name'),
+                Tables\Columns\TextColumn::make('user.email')
+                    ->searchable()
+                    ->toggleable()
+                    ->label('Email'),
+                Tables\Columns\TextColumn::make('year.year')
+                    ->toggleable()
+                    ->label('Year Level'),
+                Tables\Columns\TextColumn::make('program.abbre')
+                    ->tooltip(function (Model $record) {
+                        return Program::find($record->program_id)->name;
+                    })
+                    ->toggleable()
+                    ->formatStateUsing(fn ($state) => Str::upper($state))
+                    ->label('Program'),
+                Tables\Columns\TextColumn::make('college.abbre')
+                    ->tooltip(function (Model $record) {
+                        return College::whereRelation('programs', 'id', $record->program_id)
+                            ->first()->name;;
+                    })
+                    ->toggleable()
+                    ->formatStateUsing(fn ($state) => Str::upper($state))
+                    ->label('College'),
+                Tables\Columns\TextColumn::make('sponsor.name')
+                    ->toggleable()
+                    ->tooltip(function (Model $record) {
+                        return Sponsor::find($record->sponsor_id)->name;
+                    })
+                    ->limit(30)
+                    ->label('Sponsor'),
+                Tables\Columns\TextColumn::make('allowance_receive.academicYearSem')
+                    ->label('Last Allowance Receive'),
+
             ])
             ->filters([
-                //
+                Filter::make('college_program')
+                    ->form([
+                        MultiSelect::make('college')
+                            ->options(College::query()->pluck('name', 'id'))
+                            ->afterStateUpdated(function ($component) {
+                                $component->getContainer()->getComponents()[1]->fillStateWithNull();
+                            })
+                            ->placeholder('All')
+                            ->reactive(),
+                        MultiSelect::make('program')
+                            ->placeholder('All')
+                            ->options(function (Closure $get) {
+                                $program = Program::query();
+                                $count = 0;
+                                foreach ($get('college') as $college) {
+                                    ($count == 0) ?
+                                        $program->where('college_id', '=', $college) :
+                                        $program->orWhere('college_id', '=', $college);
+                                    $count++;
+                                }
+                                return $program->pluck('name', 'id');
+                            })
+                    ])->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['college'],
+                                function (Builder $query, $colleges) {
+                                    $inner_query = $query;
+                                    $count = 0;
+                                    foreach ($colleges as $college) {
+                                        ($count == 0) ?
+                                            $inner_query->whereRelation('college', 'college_id', '=', $college) :
+                                            $inner_query->orWhereRelation('college', 'college_id', '=', $college);
+                                        $count++;
+                                    }
+                                    return $inner_query;
+                                }
+                            )
+                            ->when(
+                                $data['program'],
+                                function (Builder $query, $programs) {
+                                    $inner_query = $query;
+                                    $count = 0;
+                                    foreach ($programs as $program) {
+                                        ($count == 0) ?
+                                            $inner_query->whereRelation('program', 'program_id', '=', $program) :
+                                            $inner_query->orWhereRelation('program', 'program_id', '=', $program);
+                                        $count++;
+                                    }
+                                    return $inner_query;
+                                }
+                            );
+                    }),
+                MultiSelectFilter::make('sponsor')
+                    ->relationship('sponsor', 'name')
+                    ->label('Sponsor'),
+                MultiSelectFilter::make('year')
+                    ->relationship('year', 'year')
+                    ->label('Year Level'),
+                MultiSelectFilter::make('allowance')
+                    ->options(Academic::query()->selectRaw('concat (year," ", IF(semester = 1, "1st Sem", "2nd Sem")) as sem , id')->pluck('sem', 'id'))
+                    ->label('Last Allowance Receive')
+                    ->column('allowance_receive.academicYearSem')
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                ])
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
@@ -151,6 +261,7 @@ class ScholarResource extends Resource
     {
         return [
             'index' => Pages\ListScholars::route('/'),
+            'view' => Pages\ViewScholar::route('/{record}'),
             'create' => Pages\CreateScholar::route('/create'),
             'edit' => Pages\EditScholar::route('/{record}/edit'),
         ];

@@ -147,7 +147,17 @@ class UserResource extends Resource
     }
     public static function getEloquentQuery(): Builder
     {
-        return static::getModel()::query()->whereNot('id', '=', auth()->user()->id);
+        // dd(Role::where('name', 'Scholar')->first()->id);
+        return static::getModel()::query()
+            ->whereNot('id', '=', auth()->user()->id)
+            ->whereNot(
+                'role_id',
+                Role::where('name', 'Scholar')->first()->id,
+            )
+            ->whereNot(
+                'role_id',
+                Role::where('name', 'Organization')->first()->id
+            );
     }
     public static function getRelations(): array
     {
