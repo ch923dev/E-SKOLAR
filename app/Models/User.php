@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -56,5 +57,8 @@ class User extends Authenticatable implements FilamentUser
     }
     public function permissions(){
         return $this->hasManyThrough(Permission::class,PermissionRole::class,'role_id','id','role_id','permission_id');
+    }
+    public function scholar() : HasOne{
+        return $this->hasOne(Scholar::class);
     }
 }

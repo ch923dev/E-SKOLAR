@@ -3,9 +3,11 @@
 namespace App\Filament\Resources\UserResource\Pages;
 
 use App\Filament\Resources\UserResource;
+use App\Mail\UserCreatedCredentials;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Facades\Hash;
 use Filament\Notifications\Notification;
+use Illuminate\Support\Facades\Mail;
 
 class CreateUser extends CreateRecord
 {
@@ -15,23 +17,16 @@ class CreateUser extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['password'] = Hash::make($data['password']);
+        // Mail::to($data['email'])->send(new UserCreatedCredentials());
+
         return $data;
     }
     protected function getRedirectUrl(): string
     {
-        $resource = static::getResource();
-        return $resource::getUrl('index');
+        return static::getResource()::getUrl('index');
     }
     protected function getCreatedNotificationMessage(): ?string
     {
-        return null;
-    }
-    protected function afterCreate(): void
-    {
-        Notification::make()
-            ->title('New User Added')
-            ->icon('heroicon-s-user-add')
-            ->success()
-            ->send();
+        return 'New User Added';
     }
 }

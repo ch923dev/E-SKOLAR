@@ -2,7 +2,9 @@
 
 use App\Models\Academic;
 use App\Models\Program;
+use App\Models\ScholarStatus;
 use App\Models\Sponsor;
+use App\Models\User;
 use App\Models\Year;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -26,6 +28,8 @@ return new class extends Migration
             $table->foreignIdFor(Sponsor::class);
             $table->foreignIdFor(Academic::class,'last_allowance_receive');
             $table->foreignIdFor(Year::class);
+            $table->foreignIdFor(ScholarStatus::class);
+            $table->foreignIdFor(User::class)->nullable()->constrained('users')->cascadeOnDelete();
             $table->timestamps();
         });
     }

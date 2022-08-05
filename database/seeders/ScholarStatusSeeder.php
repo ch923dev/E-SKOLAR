@@ -15,11 +15,13 @@ class ScholarStatusSeeder extends Seeder
      */
     public function run()
     {
-        ScholarStatus::create(
-            ['status' => 'Pending'],
-            ['status' => 'Inactive'],
-            ['status' => 'Active'],
-            ['status' => 'Graduate'],
+        ScholarStatus::insert(
+            [
+                ['status' => 'Pending'],
+                ['status' => 'Inactive'],
+                ['status' => 'Active'],
+                ['status' => 'Graduate'],
+            ]
         );
     }
 }
