@@ -6,7 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 // use Illuminate\Support\Facades\Notification;
 
@@ -48,6 +48,7 @@ class UserCredentialsNotification extends Notification
                     ->line('The introduction to the notification.')
                     ->line('This are your credential info: ')
                     ->line('Email: ' . $this->user->email)
+                    ->line('Password: ' . Str::slug($this->user->name))
                     ->action('Login', url('/'))
                     ->line('Thank you for using our application!');
     }

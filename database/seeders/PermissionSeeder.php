@@ -28,6 +28,8 @@ class PermissionSeeder extends Seeder
             [ 'name' => 'Manage Sponsor Categories' ],
             [ 'name' => 'View Scholars' ],
             [ 'name' => 'Manage Scholars' ],
+            [ 'name' => 'View Programs' ],
+            [ 'name' => 'Manage Programs' ],
         ]);
     }
 }

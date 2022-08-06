@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasAvatar;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -12,7 +13,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable implements FilamentUser
+class User extends Authenticatable implements FilamentUser, HasAvatar
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -26,7 +27,8 @@ class User extends Authenticatable implements FilamentUser
         'email',
         'password',
         'role_id',
-        'contact_number'
+        'contact_number',
+        'avatar_url'
     ];
 
     /**
@@ -52,13 +54,20 @@ class User extends Authenticatable implements FilamentUser
         return true;
         // return$this->hasVerifiedEmail();
     }
-    public function role(){
+    public function getFilamentAvatarUrl(): ?string
+    {
+        return $this->avatar_url;
+    }
+    public function role()
+    {
         return $this->belongsTo(Role::class);
     }
-    public function permissions(){
-        return $this->hasManyThrough(Permission::class,PermissionRole::class,'role_id','id','role_id','permission_id');
+    public function permissions()
+    {
+        return $this->hasManyThrough(Permission::class, PermissionRole::class, 'role_id', 'id', 'role_id', 'permission_id');
     }
-    public function scholar() : HasOne{
+    public function scholar(): HasOne
+    {
         return $this->hasOne(Scholar::class);
     }
 }

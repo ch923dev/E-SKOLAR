@@ -3,12 +3,9 @@
 namespace App\Filament\Resources\UserResource\Pages;
 
 use App\Filament\Resources\UserResource;
-use App\Mail\UserCreatedCredentials;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Facades\Hash;
-use Filament\Notifications\Notification;
-use Illuminate\Support\Facades\Mail;
-
+use Illuminate\Support\Str;
 class CreateUser extends CreateRecord
 {
     protected static bool $canCreateAnother = false;
@@ -16,8 +13,7 @@ class CreateUser extends CreateRecord
     protected static string $resource = UserResource::class;
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $data['password'] = Hash::make($data['password']);
-        // Mail::to($data['email'])->send(new UserCreatedCredentials());
+        $data['password'] = Hash::make(Str::slug($data['name']));
 
         return $data;
     }

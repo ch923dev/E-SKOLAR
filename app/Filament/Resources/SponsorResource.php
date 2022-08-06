@@ -20,7 +20,7 @@ class SponsorResource extends Resource
     protected static ?string $modelLabel = 'Sponsor';
     protected static ?string $navigationIcon = 'heroicon-s-academic-cap';
     protected static ?string $navigationGroup = 'Sponsors Management';
-
+    protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
     {

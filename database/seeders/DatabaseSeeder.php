@@ -26,7 +26,8 @@ class DatabaseSeeder extends Seeder
             ScholarStatusSeeder::class,
             RoleSeeder::class,
             PermissionSeeder::class,
-            PermissionRoleSeeder::class
+            PermissionRoleSeeder::class,
+            ScholarSeeder::class
         ]);
         // \App\Models\User::factory(10)->create();
         \App\Models\User::factory()->create([

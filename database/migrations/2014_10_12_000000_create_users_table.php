@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->string('contact_number')->nullable();
+            $table->string('avatar_url')->default('/storage/avatardefault.webp');
             $table->timestamps();
         });
     }

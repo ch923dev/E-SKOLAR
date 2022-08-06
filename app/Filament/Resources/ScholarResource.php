@@ -119,7 +119,6 @@ class ScholarResource extends Resource
                         Select::make('last_allowance_receive')
                             ->relationship('allowance_receive', 'year')
                             ->required()
-                            ->extraAttributes(['class' => 'space-y-2']),
                     ])->columnSpan(1),
                 ])->columns(3)
             );
@@ -166,6 +165,9 @@ class ScholarResource extends Resource
                     })
                     ->limit(30)
                     ->label('Sponsor'),
+                Tables\Columns\TextColumn::make('scholar_status.status')
+                    ->toggleable()
+                    ->label('Status'),
                 Tables\Columns\TextColumn::make('allowance_receive.academicYearSem')
                     ->label('Last Allowance Receive'),
 
@@ -261,8 +263,8 @@ class ScholarResource extends Resource
     {
         return [
             'index' => Pages\ListScholars::route('/'),
-            'view' => Pages\ViewScholar::route('/{record}'),
             'create' => Pages\CreateScholar::route('/create'),
+            'view' => Pages\ViewScholar::route('/{record}'),
             'edit' => Pages\EditScholar::route('/{record}/edit'),
         ];
     }

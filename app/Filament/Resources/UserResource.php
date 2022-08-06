@@ -7,43 +7,34 @@ use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Filament\Trait\Permits;
 use App\Imports\UsersImport;
-use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
-use App\Models\UserType;
-use Carbon\Carbon;
-use Closure;
 use Filament\Forms;
 use Filament\Forms\Components\Card;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Group;
-use Filament\Forms\Components\MultiSelect;
-use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Placeholder;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Filament\Tables\Filters\MultiSelectFilter;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Phpsa\FilamentPasswordReveal\Password;
-use Filament\Forms\Components\CheckboxList;
-use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Tables\Actions\Action;
-use Illuminate\Support\Facades\Http;
-use Maatwebsite\Excel\Facades\Excel;
+
 
 class UserResource extends Resource
 {
     use Permits;
     protected static ?string $model = User::class;
-    protected static bool $shouldRegisterNavigation = true;
     protected static ?string $modelLabel = 'User';
     protected static ?string $pluralModelLabel = 'Users';
     protected static ?string $navigationGroup = 'Users Management';
     protected static ?int $navigationSort = 1;
-    protected static ?string $navigationIcon = 'heroicon-s-user-group';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
     public static function form(Form $form): Form
     {
@@ -90,9 +81,9 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('role.name')->label('Role'),
                 Tables\Columns\TextColumn::make('contact_number')
                     ->formatStateUsing(function ($state) {
-                        return $state ? '+' . $state : 'No Contact Number';
+                        return $state ? $state : 'No Contact Number';
                     })
-                    ->label('Role'),
+                    ->label('Contact Number'),
             ])
             ->filters([
                 MultiSelectFilter::make('roles')
@@ -120,30 +111,27 @@ class UserResource extends Resource
     {
         return
             Group::make([
-                Group::make([
+                Card::make([
                     Forms\Components\TextInput::make('name')
-                        ->required()
-                        ->maxLength(255),
+                        ->required(),
                     Forms\Components\TextInput::make('email')
                         ->unique(User::class, 'email', fn ($record) => $record)
                         ->email()
-                        ->required()
-                        ->maxLength(255),
-                    Password::make('password')
-                        ->passwordLength(8)
-                        ->passwordUsesNumbers()
-                        ->hidden(fn (?User $record): bool => $record ? true  : false)
-                        ->required()
-                ]),
-                Group::make([
+                        ->required(),
                     Forms\Components\Select::make('role_id')
                         ->options(Role::whereNot('name', 'Organization')->whereNot('name', 'Scholar')->pluck('name', 'id'))
-                        ->label('Type')
+                        ->label('Role')
                         ->required(),
                     Forms\Components\TextInput::make('contact_number')
                         ->mask(fn (TextInput\Mask $mask) => $mask->pattern('+{639} 000 000 000'))
-                ]),
-            ])->columns(2);
+                ])->columns(2)->columnSpan(3),
+                Card::make([
+                    Placeholder::make('Avatar'),
+                    FileUpload::make('avatar_url')
+                        ->avatar()
+                        ->label('Avatar')
+                ])->columnSpan(1),
+            ])->columns(4);
     }
     public static function getEloquentQuery(): Builder
     {
@@ -161,11 +149,9 @@ class UserResource extends Resource
     }
     public static function getRelations(): array
     {
-        $relations = [];
-        if (auth()->user()->permissions->where('name', 'View Permissions')->first() ? true : false)
-            $relations[] = RelationManagers\PermissionsRelationManager::class;
-
-        return $relations;
+        return [
+            RelationManagers\PermissionsRelationManager::class
+        ];
     }
 
     public static function getPages(): array
