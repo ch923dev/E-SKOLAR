@@ -9,6 +9,7 @@ use App\Models\College;
 use App\Models\Program;
 use App\Models\Scholar;
 use App\Models\Sponsor;
+use Filament\Forms;
 use App\Models\User;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Section;
@@ -26,6 +27,7 @@ use Filament\Tables\Filters\MultiSelectFilter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rules\Unique;
 
 class ScholarResource extends Resource
 {
@@ -40,87 +42,75 @@ class ScholarResource extends Resource
     {
         return $form
             ->schema(
-                Group::make([
-                    Section::make('')->schema([
-                        TextInput::make('fname')
-                            ->afterStateUpdated(function (Closure $get, Closure $set) {
-                                $set('user.name', ($get('fname') ? $get('fname') : '') . ' ' . ($get('mname') ? $get('mname')[0] : '') . '. ' . ($get('lname') ? $get('lname') : ''));
-                            })
-                            ->reactive()
-                            ->label('First Name')
-                            ->required(),
-                        TextInput::make('mname')
-                            ->afterStateUpdated(function (Closure $get, Closure $set) {
-                                $set('user.name', ($get('fname') ? $get('fname') : '') . ' ' . ($get('mname') ? $get('mname')[0] : '') . '. ' . ($get('lname') ? $get('lname') : ''));
-                            })
-                            ->reactive()
-                            ->label('Middle Name')
-                            ->required(),
-                        TextInput::make('lname')
-                            ->afterStateUpdated(function (Closure $get, Closure $set) {
-                                $set('user.name', ($get('fname') ? $get('fname') : '') . ' ' . ($get('mname') ? $get('mname')[0] : '') . '. ' . ($get('lname') ? $get('lname') : ''));
-                                $set('user.password', Hash::make(($get('fname') ? $get('fname') : '') . ($get('id') ? $get('id') : '')));
-                            })
-                            ->label('Last Name')
-                            ->reactive()
-                            ->required(),
-                        Fieldset::make('')
-                            ->relationship('user')
-                            ->schema([
-                                TextInput::make('email')
-                                    ->email()
-                                    ->unique(User::class, 'email', fn ($record) => $record)
-                                    ->label('Email')
+                Forms\Components\Group::make([
+                    Forms\Components\Section::make('Personal Information')->schema([
+                        Forms\Components\Group::make([
+                            Forms\Components\Group::make([
+                                Forms\Components\Placeholder::make('Avatar'),
+                                Forms\Components\FileUpload::make('user.avatar_url')
+                                    ->avatar()
+                                    ->label('Avatar')
+                            ])->columnSpan(1),
+                            Forms\Components\Group::make([
+                                Forms\Components\TextInput::make('fname')
+                                    ->autofocus()
+                                    ->label('First Name')
                                     ->required(),
-                                TextInput::make('contact_number')
-                                    ->mask(fn (TextInput\Mask $mask) => $mask->pattern('+{639} 000 000 000'))
-                                    ->label('Contact Number'),
-                                Group::make([
-                                    TextInput::make('name')
-                                        ->label('')
-                                        ->extraAttributes(['class' => 'hidden']),
-                                    TextInput::make('role_id')
-                                        ->label('')
-                                        ->default(3)
-                                        ->extraAttributes(['class' => 'hidden']),
-                                    TextInput::make('password')
-                                        ->password()
-                                        ->hidden(fn ($record) => $record)
-                                        ->label('')
-                                        ->extraAttributes(['class' => 'hidden'])
-                                ])->columns(3)->columnSpan(2),
-                            ])
-                            ->columnSpan(2)
-                            ->extraAttributes(['class' => 'border-0 p-0']),
-                        Select::make('year_id')
-                            ->relationship('year', 'year')
-                            ->required(),
-                        Group::make([
-                            Select::make('program_id')
+                                Forms\Components\TextInput::make('mname')
+                                    ->label('Middle Name')
+                                    ->required(),
+                                Forms\Components\TextInput::make('lname')
+                                    ->label('Last Name')
+                                    ->required(),
+                            ])->columnSpan(2),
+                        ])->columns(3),
+                        Forms\Components\Group::make([
+                            TextInput::make('user.email')
+                                ->email()
+                                ->unique(User::class, 'email', ignorable: fn(?Model $record) => $record,ignoreRecord: true, callback:function(?Model $record, $state, Unique $rule){
+                                    return $rule->ignore($record->id,'scholars.id');
+                                })
+                                ->label('Email')
+                                ->required(),
+                            TextInput::make('user.contact_number')
+                                ->mask(fn (TextInput\Mask $mask) => $mask->pattern('+{639} 000 000 000'))
+                                ->label('Contact Number'),
+                        ])->columns(2),
+                    ])->columns(1),
+                    Forms\Components\Group::make([
+                        Forms\Components\Section::make('School Information')->schema([
+                            Forms\Components\TextInput::make('id')
+                                ->numeric()
+                                ->mask(fn (Forms\Components\TextInput\Mask $mask) => $mask->pattern('0000 000 000'))
+                                ->unique(Scholar::class, 'id', fn (?Model $record) => $record)
+                                // ->reactive()
+                                ->required()
+                                ->label('ID #'),
+                            Forms\Components\Select::make('year_id')
+                                ->label('Year Level')
+                                ->relationship('year', 'year')
+                                ->required(),
+                            Forms\Components\Select::make('program_id')
+                                ->label('Program')
                                 ->relationship('program', 'name')
                                 ->required()
-                                ->columnSpan('1.5'),
-                            Select::make('sponsor_id')
+                        ])->columnSpan(1),
+                        Forms\Components\Section::make('Scholarship Information')->schema([
+                            Forms\Components\Select::make('sponsor_id')
+                                ->label('Sponsor')
                                 ->relationship('sponsor', 'name')
                                 ->required(),
-                        ])->columnSpan(3)->columns(2),
-                    ])->columnSpan(2)->columns(3),
-                    Section::make('')->schema([
-                        TextInput::make('id')
-                            ->mask(fn (TextInput\Mask $mask) => $mask->pattern('0000 000 000'))
-                            ->unique(Scholar::class, 'id', fn ($record) => $record)
-                            ->disabled(fn ($record) => $record)
-                            // ->reactive()
-                            ->required()
-                            ->label('ID #'),
-                        Select::make('scholar_status_id')
-                            ->relationship('scholar_status', 'status')
-                            ->required(),
-                        Select::make('last_allowance_receive')
-                            ->relationship('allowance_receive', 'year')
-                            ->required()
-                    ])->columnSpan(1),
-                ])->columns(3)
+                            Forms\Components\Select::make('scholar_status_id')
+                                ->label('Scholar Status')
+                                ->relationship('scholar_status', 'status')
+                                ->required(),
+                            Forms\Components\Select::make('last_allowance_receive')
+                                ->label('Last Allowance Receive')
+                                ->relationship('allowance_receive', 'year')
+                                ->required()
+                        ])->columnSpan(1),
+                    ])->columns(2)
+                ])
             );
     }
 

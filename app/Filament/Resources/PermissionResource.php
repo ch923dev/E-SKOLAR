@@ -47,8 +47,11 @@ class PermissionResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                ])
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
@@ -57,13 +60,13 @@ class PermissionResource extends Resource
 
     public static function getRelations(): array
     {
-        $relations = [];
-        if (auth()->user()->permissions->where('name', 'View Roles')->first() ? true : false)
-            $relations[] = RelationManagers\RolesRelationManager::class;
-        if (auth()->user()->permissions->where('name', 'View Users')->first() ? true : false)
-            $relations[] = RelationManagers\UsersRelationManager::class;
+        // $relations = [];
+        // if (auth()->user()->permissions->where('name', 'View Roles')->first() ? true : false)
+        //     $relations[] = RelationManagers\RolesRelationManager::class;
+        // if (auth()->user()->permissions->where('name', 'View Users')->first() ? true : false)
+        //     $relations[] = RelationManagers\UsersRelationManager::class;
 
-        return $relations;
+        return [];
     }
 
     public static function getPages(): array
