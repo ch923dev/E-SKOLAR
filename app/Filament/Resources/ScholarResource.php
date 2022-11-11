@@ -33,7 +33,7 @@ class ScholarResource extends Resource
 {
     protected static ?string $model = Scholar::class;
     protected static ?string $modelLabel = 'Scholar';
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'fas-user-tie';
     protected static ?string $pluralModelLabel = 'Scholars';
     protected static ?string $navigationGroup = 'Scholars Management';
     protected static ?int $navigationSort = 1;
