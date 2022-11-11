@@ -67,8 +67,8 @@ class ScholarResource extends Resource
                         Forms\Components\Group::make([
                             TextInput::make('user.email')
                                 ->email()
-                                ->unique(User::class, 'email', ignorable: fn(?Model $record) => $record,ignoreRecord: true, callback:function(?Model $record, $state, Unique $rule){
-                                    return $rule->ignore($record->id,'scholars.id');
+                                ->unique(User::class, 'email', ignorable: fn (?Model $record) => $record, ignoreRecord: true, callback: function (?Model $record, $state, Unique $rule) {
+                                    return $rule->ignore($record->id, 'scholars.id');
                                 })
                                 ->label('Email')
                                 ->required(),
@@ -119,6 +119,7 @@ class ScholarResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('id')
+                    ->sortable()
                     ->searchable()
                     ->toggleable()
                     ->label('ID'),
@@ -127,6 +128,7 @@ class ScholarResource extends Resource
                     ->toggleable()
                     ->label('Name'),
                 Tables\Columns\TextColumn::make('user.email')
+                    ->sortable()
                     ->searchable()
                     ->toggleable()
                     ->label('Email'),
