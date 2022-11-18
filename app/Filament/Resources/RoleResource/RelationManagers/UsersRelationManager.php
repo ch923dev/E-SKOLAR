@@ -18,10 +18,14 @@ use Phpsa\FilamentPasswordReveal\Password;
 
 class UsersRelationManager extends RelationManager
 {
-    protected static ?string $modelLabel = "User";
+    // protected static ?string $modelLabel = "User";
     protected static string $relationship = 'users';
 
-    protected static ?string $recordTitleAttribute = 'name';
+    protected static ?string $recordTitleAttribute = 'role';
+    public function getTableModelLabel(): string
+    {
+        return 'User with ' . $this->ownerRecord->role . ' access level.';
+    }
 
     public static function form(Form $form): Form
     {
@@ -31,17 +35,20 @@ class UsersRelationManager extends RelationManager
                     Group::make([
                         Forms\Components\TextInput::make('name')
                             ->required()
-                            ->maxLength(255),
+                            ->hidden(fn (?Model $record): bool => $record ? true  : false),
                         Forms\Components\TextInput::make('email')
                             ->unique(User::class, 'email', fn ($record) => $record)
                             ->email()
                             ->required()
-                            ->maxLength(255),
+                            ->hidden(fn (?Model $record): bool => $record ? true  : false),
                         Password::make('password')
                             ->passwordLength(8)
                             ->passwordUsesNumbers()
                             ->hidden(fn (?Model $record): bool => $record ? true  : false)
-                            ->required()
+                            ->required(),
+                        Forms\Components\Select::make('role_id')
+                            ->relationship('role', 'role')
+                            ->hiddenOn('create')
                     ]),
                 ])->columns(1)
             );
@@ -51,17 +58,17 @@ class UsersRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable(),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()->label('New User')->disableCreateAnother(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()->label('Change Role'),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
