@@ -134,6 +134,10 @@ return [
     | register dashboard widgets from. You may also register widgets here.
     |
     */
+    'database_notifications' => [
+        'enabled' => true,
+        'polling_interval' => '30s',
+    ],
 
     'widgets' => [
         'namespace' => 'App\\Filament\\Widgets',

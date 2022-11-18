@@ -18,13 +18,17 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Closure;
+use Illuminate\Database\Eloquent\Model;
 use Filament\Tables\Filters\MultiSelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Phpsa\FilamentPasswordReveal\Password;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Tables\Actions\Action;
-
+use Filament\Tables\Actions\ActionGroup;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Filters\SelectFilter;
 
 class UserResource extends Resource
 {
@@ -45,40 +49,42 @@ class UserResource extends Resource
     {
         return $table
             ->headerActions([
-                FilamentExportHeaderAction::make('export')
-                    ->disablePreview()
-                    ->disableAdditionalColumns()
-                    ->button(),
-                Action::make('import')
-                    ->action(function (array $data) {
-                        $import = new UsersImport();
-                        $import->import('storage/' . $data['file']);
-                        Notification::make()
-                            ->title('Successfully Imported')
-                            ->success()
-                            ->send();
-                        if (count($import->failures()) > 0)
-                            Notification::make()
-                                ->title(count($import->failures()) . ' failed to be imported')
-                                ->danger()
-                                ->send();
-                    })
-                    ->form([
-                        Forms\Components\FileUpload::make('file')
-                            ->required()
-                    ])
-                    ->hidden(function () {
-                        return auth()->user()->permissions->where('name', 'Manage Users')->first() ? false : true;
-                    })
-                    ->button()
-                    ->icon('heroicon-o-upload')
+                // FilamentExportHeaderAction::make('export')
+                //     ->disablePreview()
+                //     ->disableAdditionalColumns()
+                //     ->button(),
+                // Action::make('import')
+                    // ->action(function (array $data) {
+                    //     $import = new UsersImport();
+                    //     $import->import('storage/' . $data['file']);
+                    //     Notification::make()
+                    //         ->title('Successfully Imported')
+                    //         ->success()
+                    //         ->send();
+                    //     if (count($import->failures()) > 0)
+                    //         Notification::make()
+                    //             ->title(count($import->failures()) . ' failed to be imported')
+                    //             ->danger()
+                    //             ->send();
+                    // })
+                    // ->form([
+                    //     Forms\Components\FileUpload::make('file')
+                    //         ->required()
+                    // ])
+                    // ->hidden(function () {
+                    //     return auth()->user()->permissions->where('name', 'Manage Users')->first() ? false : true;
+                    // })
+                    // ->button()
+                    // ->icon('heroicon-o-upload')
             ])
             ->columns([
+                ImageColumn::make('avatar_url')
+                    ->circular(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('role.name')->label('Role'),
+                Tables\Columns\TextColumn::make('role.role')->label('Role'),
                 Tables\Columns\TextColumn::make('contact_number')
                     ->formatStateUsing(function ($state) {
                         return $state ? $state : 'No Contact Number';
@@ -86,27 +92,30 @@ class UserResource extends Resource
                     ->label('Contact Number'),
             ])
             ->filters([
-                MultiSelectFilter::make('roles')
-                    ->options(Role::whereNot('name', '=', 'Scholar')
-                        ->whereNot('name', '=', 'Organization')
-                        ->pluck('name', 'id'))
-                    ->column('role.name')
+                SelectFilter::make('roles')
+                    ->multiple()
+                    ->options(Role::whereNot('role', '=', 'Scholar')
+                        ->whereNot('role', '=', 'Organization')
+                        ->pluck('role', 'id'))
+                    ->attribute('role.role')
                     ->label('Role')
             ])
             ->actions([
-                Tables\Actions\ViewAction::make()
-                    ->visible(static::can_view(static::$pluralModelLabel)),
-                Tables\Actions\EditAction::make()
-                    ->visible(static::can_manage(static::$pluralModelLabel)),
-                Tables\Actions\DeleteAction::make()
-                    ->visible(static::can_manage(static::$pluralModelLabel)),
+                ActionGroup::make([
+                    Tables\Actions\ViewAction::make()
+                        ->visible(static::can_view(static::$pluralModelLabel)),
+                    Tables\Actions\EditAction::make()
+                        ->visible(static::can_manage(static::$pluralModelLabel)),
+                    Tables\Actions\DeleteAction::make()
+                        ->visible(static::can_manage(static::$pluralModelLabel)),
+                ]),
+
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make()
                     ->visible(static::can_manage(static::$pluralModelLabel)),
             ]);
     }
-
     public static function getFormSchema()
     {
         return
@@ -119,7 +128,7 @@ class UserResource extends Resource
                         ->email()
                         ->required(),
                     Forms\Components\Select::make('role_id')
-                        ->options(Role::whereNot('name', 'Organization')->whereNot('name', 'Scholar')->pluck('name', 'id'))
+                        ->options(Role::whereNot('role', 'Organization')->whereNot('role', 'Scholar')->pluck('role', 'id'))
                         ->label('Role')
                         ->required(),
                     Forms\Components\TextInput::make('contact_number')
@@ -140,11 +149,11 @@ class UserResource extends Resource
             ->whereNot('id', '=', auth()->user()->id)
             ->whereNot(
                 'role_id',
-                Role::where('name', 'Scholar')->first()->id,
+                Role::where('role', 'Scholar')->first()->id,
             )
             ->whereNot(
                 'role_id',
-                Role::where('name', 'Organization')->first()->id
+                Role::where('role', 'Organization')->first()->id
             );
     }
     public static function getRelations(): array
@@ -157,9 +166,9 @@ class UserResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListUsers::route('/'),
-            'create' => Pages\CreateUser::route('/create'),
-            'edit' => Pages\EditUser::route('/{record}/edit'),
+            'index' => Pages\ManageUser::route('/'),
+            // 'create' => Pages\CreateUser::route('/create'),
+            // 'edit' => Pages\EditUser::route('/{record}/edit'),
             'view' => Pages\ViewUser::route('/{record}'),
         ];
     }

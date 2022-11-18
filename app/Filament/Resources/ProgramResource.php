@@ -23,7 +23,7 @@ class ProgramResource extends Resource
     protected static ?string $modelLabel = 'Program';
     protected static ?string $navigationGroup = 'Curriculum Management';
     protected static ?int $navigationSort = 1;
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'fas-book-open-reader';
 
     public static function form(Form $form): Form
     {

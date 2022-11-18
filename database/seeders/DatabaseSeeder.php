@@ -27,7 +27,9 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             PermissionSeeder::class,
             PermissionRoleSeeder::class,
-            ScholarSeeder::class
+            ModuleSeeder::class,
+            ModuleRoleSeeder::class
+            // ScholarSeeder::class
         ]);
         // \App\Models\User::factory(10)->create();
         \App\Models\User::factory()->create([
@@ -37,6 +39,9 @@ class DatabaseSeeder extends Seeder
             'role_id' => 1
         ]);
         \App\Models\User::factory(10)->create();
+        \App\Models\User::factory(10)->create([
+            'role_id' => null
+        ]);
 
     }
 }

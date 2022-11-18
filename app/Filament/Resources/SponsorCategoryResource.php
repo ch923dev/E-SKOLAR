@@ -18,7 +18,6 @@ class SponsorCategoryResource extends Resource
 {
     protected static ?string $model = SponsorCategory::class;
     protected static ?string $modelLabel = 'Sponsor Category';
-    // protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
     protected static ?string $navigationGroup = 'Sponsors Management';
     protected static ?string $navigationIcon = 'heroicon-o-collection';
     protected static ?int $navigationSort = 2;
