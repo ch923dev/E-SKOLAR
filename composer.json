@@ -10,6 +10,7 @@
         "doctrine/dbal": "^3.3",
         "filament/filament": "^2.15",
         "guzzlehttp/guzzle": "^7.2",
+        "konnco/filament-import": "^1.4",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^2.14.1",
         "laravel/tinker": "^2.7",
@@ -19,6 +20,7 @@
         "psr/simple-cache": "2.0"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.7",
         "fakerphp/faker": "^1.9.1",
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.0.1",
