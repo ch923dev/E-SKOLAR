@@ -56,7 +56,6 @@ class ModulesRelationManager extends RelationManager
                     ->label('Change Access Level')
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
 }
