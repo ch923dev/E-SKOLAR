@@ -17,6 +17,7 @@
   - [4.1 **Role Model**](#41-role-model)
     - [4.1.1 **Attributes**](#411-attributes)
     - [4.1.2 **Model**](#412-model)
+      - [4.1.2.1 **Relationships**](#4121-relationships)
     - [4.1.3 **Seeder**](#413-seeder)
     - [4.1.4 **Factory**](#414-factory)
 - [5. Resources](#5-resources)
@@ -46,19 +47,19 @@
   
 ### 4.1.1 **Attributes**
 
->| Attribute      | Key (Type) | Description |
->| :--- | :--- | :--- |
->| **id**      | Primary (Integer) | Primary key of the model
->| role   | Attribute(Text) | Name of the model
+| Attribute      | Key (Type) | Description |
+| :--- | :--- | :--- |
+| **id**      | Primary (Integer) | Primary key of the model
+| role   | Attribute(Text) | Name of the model
 
 ### 4.1.2 **Model**
 
-> **Relationships**
->
->| Relationship Name      | Relationship Type | Model | Pivot |
->| :--- | :--- | :--- | :--- |
->| modules      | belongsToMany | Module | level
->| users   | hasMany | User
+#### 4.1.2.1 **Relationships**
+
+| Relationship Name      | Relationship Type | Model | Pivot |
+| :--- | :--- | :--- | :--- |
+| modules      | belongsToMany | Module | level
+| users   | hasMany | User
 
 ### 4.1.3 **Seeder**
 
@@ -77,15 +78,34 @@
 
 ## 5.1 **Role Resource**
 
-- [ ] Admin Access
-  - [x] Viewing Role
-    - [x] List Role
+- [x] Admin Access
+  - [x] Viewing Model
+    - [x] List Viewing
       - [x] Searchable Role
       - [x] Sortable User Count
-    - [x] Relation Manager
-      - [x] Users
-      - [x] Modules
+    - [x] Individual Viewing
+      - [x] Relation Manager
+        - [x] Users
+        - Description: User with **Role** Model
+          - [x] Adding New User
+          - [x] Searching User
+          - [x] Changing Role
+        - [x] Modules
+        - Description: Modules and Access Level with **Role** Model
+          - [x] Searchable Module
+          - [x] Change Access Level
   - [x] Adding Role
+    - [x] Form Wizard
+      - [x]  Role Name
+        - [x] Attribute: Unique Name
+      - [x]  Module Access Level
+        - [x]  Access Levels:
+          - [x]  Manage
+          - [x]  View
+          - [x]  Not Applicable
+      - [x]  Adding Users (Optional)
   - [x] Delete Role
+    - [x] Users within that **Role** will have null ***role_id***
+    - [x] Default **Roles** will not be deleted
   - [x] Update Role
-- [x] Adding List of Permission per User
+    - [x] Default **Roles** will not be updated
