@@ -1,64 +1,87 @@
-<img src="https://lh6.googleusercontent.com/wae9TANcIMyuN-t-ljpSirem12jZEKq6X4SzP794vYCO6oyNfngciDxeSsqDo2yzmv4f7JjGvh_YkOdE-uHu=w3594-h2710" />
 
-# E-SKOLAR
+# 1. E-Scholar
 
-## DEPENDENCIES
+## Description
+
+    E-Skolar is a Scholar Monitoring System to be used by USTP Admission and Scholarship Office (ASO)
+
+- [1. E-Scholar](#1-e-scholar)
+  - [Description](#description)
+- [2. DEPENDENCIES](#2-dependencies)
+- [3. SETUP](#3-setup)
+  - [3.1 **Laravel**](#31-laravel)
+- [4. Models and Database](#4-models-and-database)
+  - [4.1 **Role Model**](#41-role-model)
+    - [4.1.1 **Attributes**](#411-attributes)
+    - [4.1.2 **Model**](#412-model)
+    - [4.1.3 **Seeder**](#413-seeder)
+    - [4.1.4 **Factory**](#414-factory)
+- [5. Resources](#5-resources)
+
+# 2. DEPENDENCIES
 
 - php
 - composer
 - local database (mysql || xampp || lamp || postgresql || any)
 - nodejs
 
-### SETUP
+# 3. SETUP
 
-- #### Tailwindcss
+## 3.1 **Laravel**
 
-  - run ``` npm install ```
+- run ``` composer update ```
+- copy ``` .env.example ``` file to ``` .env ```
+- configure ``` .env ``` file
+- run ``` php artisan migrate:fresh --seed ```
+- run ``` php artisan key:generate ```
+- run ``` php artisan serve ```
 
-- ##### Laravel
+# 4. Models and Database
 
-  - run ``` composer update ```
-  - rename ``` .env.example ``` file to ``` .env ```
-  - configure ``` .env ``` file
-  - run ``` php artisan migrate:fresh --seed ```
-  - run ``` php artisan key:generate ```
-  - run ``` php artisan serve ```
+## 4.1 **Role Model**
+  
+### 4.1.1 **Attributes**
 
-- ##### Currently Working
+>| Attribute      | Key (Type) | Description |
+>| :--- | :--- | :--- |
+>| **id**      | Primary (Integer) | Primary key of the model
+>| role   | Attribute(Text) | Name of the model
 
-  - Users Resource
-    - [x] Viewing Users
-    - [x] Adding Users
-    - [x] Delete User
-    - [x] Update User
-    - [x] Adding List of Permission per User
+### 4.1.2 **Model**
 
-  - Permissions Resource
-    - [x] Viewing Permissions
-    - [x] Adding Permissions
-    - [x] Delete Permission
-    - [x] Update Permission
-    - [x] Adding List of Users per Permission
-    - [x] Adding List of Roles per Permission
+> **Relationships**
+>
+>| Relationship Name      | Relationship Type | Model | Pivot |
+>| :--- | :--- | :--- | :--- |
+>| modules      | belongsToMany | Module | level
+>| users   | hasMany | User
 
-  - Roles Resource
-    - [x] Viewing Roles
-    - [x] Adding Roles
+### 4.1.3 **Seeder**
+
+> **Default Role Inserted**
+>
+>  1. Admin
+>  2. Staff
+>  3. Scholar
+>  4. Organization
+  
+### 4.1.4 **Factory**
+
+> No Model factory was produced.
+
+# 5. Resources
+
+- ## 5.1 **Role Resource**
+
+  - [ ] Admin Access
+    - [x] Viewing Role
+      - [x] List Role
+        - [x] Searchable Role
+        - [x] Sortable User Count
+      - [x] Relation Manager
+        - [x] Users
+        - [x] Modules
+    - [x] Adding Role
     - [x] Delete Role
     - [x] Update Role
-    - [x] Adding List of Users per Role
-    - [x] Adding List of Permission per Role
-
-  - Sponsor Categories Resource
-    - [x] Viewing Sponsor Categories
-    - [x] Adding Sponsor Categories
-    - [x] Delete Sponsor Category
-    - [x] Update Sponsor Category
-    - [x] Adding List of Sponsors per Sponsor Category
-
-  - Sponsors Resource
-    - [x] Viewing Sponsors
-    - [x] Adding Sponsors
-    - [x] Delete Sponsor
-    - [x] Update Sponsor
-    - [ ] Adding List of Scholar per Sponsor
+  - [x] Adding List of Permission per User
