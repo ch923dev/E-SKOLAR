@@ -12,15 +12,9 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Illuminate\Support\Str;
-use Closure;
 use Illuminate\Database\Eloquent\Collection;
 use Filament\Notifications\Notification;
-use Filament\Tables\Actions\DeleteAction;
-use Filament\Tables\Actions\DeleteBulkAction;
 
 class RoleResource extends Resource
 {
@@ -57,18 +51,12 @@ class RoleResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ActionGroup::make([
-                    Tables\Actions\EditAction::make()->hidden(fn (Model $record) => match ($record->role) {
-                        'Admin' => true,
-                        'Staff' => true,
-                        'Scholar' => true,
-                        'Organization' => true,
+                    Tables\Actions\EditAction::make()->hidden(fn (Model $record) => match ($record->id) {
+                        1, 2, 3, 4 => true,
                         default => false
                     }),
-                    Tables\Actions\DeleteAction::make()->hidden(fn (Model $record) => match ($record->role) {
-                        'Admin' => true,
-                        'Staff' => true,
-                        'Scholar' => true,
-                        'Organization' => true,
+                    Tables\Actions\DeleteAction::make()->hidden(fn (Model $record) => match ($record->id) {
+                        1, 2, 3, 4 => true,
                         default => false
                     })->before(function (Model $record) {
                         User::where('role_id', $record->id)->update(['role_id' => null]);
@@ -78,29 +66,28 @@ class RoleResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make()
-                // ->disabled(function (Collection $records, DeleteBulkAction $action) {
-                //     if ($records->whereIn('role', ['Organization', 'Admin', 'Scholar', 'Staff'])->count() >= 1) {
-                //         return true;
-                //     } else {
-                //         Notification::make()
-                //             ->title('You cannot delete default roles')
-                //             ->icon('heroicon-o-document-text')
-                //             ->iconColor('danger')
-                //             ->send();
-                //         return false;
-                //     }
-                // }),
+                    ->action(function (Collection $records) {
+                        $notif = false;
+                        foreach ($records as $value) {
+                            if ($value->id > 4) {
+                                $records->find($value->id)->delete();
+                            } else {
+                                $notif = true;
+                            }
+                            if ($notif) {
+                                Notification::make()
+                                    ->title('You cannot delete default roles')
+                                    ->icon('heroicon-o-lock-closed')
+                                    ->iconColor('danger')
+                                    ->send();
+                            }
+                        }
+                    })
             ]);
     }
 
     public static function getRelations(): array
     {
-        // $relations = [];
-        // if (auth()->user()->permissions->where('name', 'View Permissions')->first() ? true : false)
-        //     $relations[] = RelationManagers\PermissionsRelationManager::class;
-        // if (auth()->user()->permissions->where('name', 'View Users')->first() ? true : false)
-        //     $relations[] = RelationManagers\UsersRelationManager::class;
-        // return $relations;
         return [
             RelationManagers\ModulesRelationManager::class,
             RelationManagers\UsersRelationManager::class
