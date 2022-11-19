@@ -5,8 +5,11 @@
 
     E-Skolar is a Scholar Monitoring System to be used by USTP Admission and Scholarship Office (ASO)
 
+## Table of Contents
+
 - [1. E-Scholar](#1-e-scholar)
   - [Description](#description)
+  - [Table of Contents](#table-of-contents)
 - [2. DEPENDENCIES](#2-dependencies)
 - [3. SETUP](#3-setup)
   - [3.1 **Laravel**](#31-laravel)
