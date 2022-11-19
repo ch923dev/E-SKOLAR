@@ -17,6 +17,7 @@
     - [4.1.3 **Seeder**](#413-seeder)
     - [4.1.4 **Factory**](#414-factory)
 - [5. Resources](#5-resources)
+  - [5.1 **Role Resource**](#51-role-resource)
 
 # 2. DEPENDENCIES
 
@@ -71,17 +72,17 @@
 
 # 5. Resources
 
-- ## 5.1 **Role Resource**
+## 5.1 **Role Resource**
 
-  - [ ] Admin Access
-    - [x] Viewing Role
-      - [x] List Role
-        - [x] Searchable Role
-        - [x] Sortable User Count
-      - [x] Relation Manager
-        - [x] Users
-        - [x] Modules
-    - [x] Adding Role
-    - [x] Delete Role
-    - [x] Update Role
-  - [x] Adding List of Permission per User
+- [ ] Admin Access
+  - [x] Viewing Role
+    - [x] List Role
+      - [x] Searchable Role
+      - [x] Sortable User Count
+    - [x] Relation Manager
+      - [x] Users
+      - [x] Modules
+  - [x] Adding Role
+  - [x] Delete Role
+  - [x] Update Role
+- [x] Adding List of Permission per User
