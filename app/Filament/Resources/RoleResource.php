@@ -48,6 +48,7 @@ class RoleResource extends Resource
                 Tables\Columns\TextColumn::make('role')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('users_count')
+                    ->sortable()
                     ->counts('users')
                     ->label('Total Users'),
             ])
@@ -76,18 +77,19 @@ class RoleResource extends Resource
                 ]),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make()->disabled(function (Collection $records, DeleteBulkAction $action) {
-                    if ($records->whereIn('role', ['Organization', 'Admin', 'Scholar', 'Staff'])->count() >= 1) {
-                        return true;
-                    } else {
-                        Notification::make()
-                            ->title('You cannot delete default roles')
-                            ->icon('heroicon-o-document-text')
-                            ->iconColor('danger')
-                            ->send();
-                        return false;
-                    }
-                }),
+                Tables\Actions\DeleteBulkAction::make()
+                // ->disabled(function (Collection $records, DeleteBulkAction $action) {
+                //     if ($records->whereIn('role', ['Organization', 'Admin', 'Scholar', 'Staff'])->count() >= 1) {
+                //         return true;
+                //     } else {
+                //         Notification::make()
+                //             ->title('You cannot delete default roles')
+                //             ->icon('heroicon-o-document-text')
+                //             ->iconColor('danger')
+                //             ->send();
+                //         return false;
+                //     }
+                // }),
             ]);
     }
 

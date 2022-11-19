@@ -71,7 +71,6 @@ class UsersRelationManager extends RelationManager
                 Tables\Actions\EditAction::make()->label('Change Role'),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
 }
