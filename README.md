@@ -78,34 +78,33 @@
 
 ## 5.1 **Role Resource**
 
-- [x] Admin Access
-  - [x] Viewing Model
-    - [x] List Viewing
-      - [x] Searchable Role
-      - [x] Sortable User Count
-    - [x] Individual Viewing
-      - [x] Relation Manager
-        - [x] Users
-        - Description: User with **Role** Model
-          - [x] Adding New User
-          - [x] Searching User
-          - [x] Changing Role
-        - [x] Modules
-        - Description: Modules and Access Level with **Role** Model
-          - [x] Searchable Module
-          - [x] Change Access Level
-  - [x] Adding Role
-    - [x] Form Wizard
-      - [x]  Role Name
-        - [x] Attribute: Unique Name
-      - [x]  Module Access Level
-        - [x]  Access Levels:
-          - [x]  Manage
-          - [x]  View
-          - [x]  Not Applicable
-      - [x]  Adding Users (Optional)
-  - [x] Delete Role
-    - [x] Users within that **Role** will have null ***role_id***
-    - [x] Default **Roles** will not be deleted
-  - [x] Update Role
-    - [x] Default **Roles** will not be updated
+- [x] Viewing Model
+  - [x] List Viewing
+    - [x] Searchable Role
+    - [x] Sortable User Count
+  - [x] Individual Viewing
+    - [x] Relation Manager
+      - [x] Users
+      - Description: User with **Role** Model
+        - [x] Adding New User
+        - [x] Searching User
+        - [x] Changing Role
+      - [x] Modules
+      - Description: Modules and Access Level with **Role** Model
+        - [x] Searchable Module
+        - [x] Change Access Level
+- [x] Adding Role
+  - [x] Form Wizard
+    - [x]  Role Name
+      - [x] Attribute: Unique Name
+    - [x]  Module Access Level
+      - [x]  Access Levels:
+        - [x]  Manage
+        - [x]  View
+        - [x]  Not Applicable
+    - [x]  Adding Users (Optional)
+- [x] Delete Role
+  - [x] Users within that **Role** will have null ***role_id***
+  - [x] Default **Roles** will not be deleted
+- [x] Update Role
+  - [x] Default **Roles** will not be updated
