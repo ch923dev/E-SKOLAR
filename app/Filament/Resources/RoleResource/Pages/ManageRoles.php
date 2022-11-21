@@ -12,11 +12,7 @@ use Closure;
 use Filament\Forms\Components\Wizard\Step;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Forms;
-use Filament\Forms\ComponentContainer;
 use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 
 class ManageRoles extends ManageRecords
@@ -93,6 +89,6 @@ class ManageRoles extends ManageRecords
     }
     protected function getTableRecordUrlUsing(): Closure
     {
-        return fn (Model $record): string => RoleResource::getUrl('view', ['record' => $record]);
+        return fn (Model $record): string => static::$resource::getUrl('view', ['record' => $record]);
     }
 }

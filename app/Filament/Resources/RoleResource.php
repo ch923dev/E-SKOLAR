@@ -69,7 +69,7 @@ class RoleResource extends Resource
                     ->action(function (Collection $records) {
                         $notif = false;
                         foreach ($records as $value) {
-                            if ($value->id > 4) {
+                            if (!$value->default) {
                                 $records->find($value->id)->delete();
                             } else {
                                 $notif = true;

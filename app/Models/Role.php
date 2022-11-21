@@ -4,10 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\support\Str;
 
 class Role extends Model
 {
     use HasFactory;
+
+
+    public static function moduleName() : string
+    {
+        return Str::plural('Role');
+    }
+
     /**
      * Indicates if the model should be timestamped.
      *
@@ -20,14 +28,16 @@ class Role extends Model
      * @var array
      */
     protected $fillable = ['role'];
-    public function permissions(){
+    public function permissions()
+    {
         return $this->belongsToMany(Permission::class);
     }
-    public function users(){
+    public function users()
+    {
         return $this->hasMany(User::class);
     }
-    public function modules(){
+    public function modules()
+    {
         return $this->belongsToMany(Module::class)->withPivot('level');
     }
-
 }

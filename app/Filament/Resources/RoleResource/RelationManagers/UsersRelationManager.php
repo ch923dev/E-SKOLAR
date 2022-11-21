@@ -18,7 +18,6 @@ use Phpsa\FilamentPasswordReveal\Password;
 
 class UsersRelationManager extends RelationManager
 {
-    // protected static ?string $modelLabel = "User";
     protected static string $relationship = 'users';
 
     protected static ?string $recordTitleAttribute = 'role';
@@ -35,16 +34,16 @@ class UsersRelationManager extends RelationManager
                     Group::make([
                         Forms\Components\TextInput::make('name')
                             ->required()
-                            ->hidden(fn (?Model $record): bool => $record ? true  : false),
+                            ->hiddenOn('edit'),
                         Forms\Components\TextInput::make('email')
                             ->unique(User::class, 'email', fn ($record) => $record)
                             ->email()
                             ->required()
-                            ->hidden(fn (?Model $record): bool => $record ? true  : false),
+                            ->hiddenOn('edit'),
                         Password::make('password')
                             ->passwordLength(8)
                             ->passwordUsesNumbers()
-                            ->hidden(fn (?Model $record): bool => $record ? true  : false)
+                            ->hiddenOn('edit')
                             ->required(),
                         Forms\Components\Select::make('role_id')
                             ->relationship('role', 'role')
@@ -60,6 +59,10 @@ class UsersRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('email')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('contact_number')
+                    ->searchable(),
             ])
             ->filters([
                 //
@@ -69,8 +72,6 @@ class UsersRelationManager extends RelationManager
             ])
             ->actions([
                 Tables\Actions\EditAction::make()->label('Change Role'),
-            ])
-            ->bulkActions([
             ]);
     }
 }
