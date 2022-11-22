@@ -51,17 +51,13 @@ class RoleResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ActionGroup::make([
-                    Tables\Actions\EditAction::make()->hidden(fn (Model $record) => match ($record->id) {
-                        1, 2, 3, 4 => true,
-                        default => false
-                    }),
-                    Tables\Actions\DeleteAction::make()->hidden(fn (Model $record) => match ($record->id) {
-                        1, 2, 3, 4 => true,
-                        default => false
-                    })->before(function (Model $record) {
-                        User::where('role_id', $record->id)->update(['role_id' => null]);
-                    }),
-
+                    Tables\Actions\EditAction::make()
+                        ->hidden(fn (Model $record) => $record->default),
+                    Tables\Actions\DeleteAction::make()
+                        ->hidden(fn (Model $record) => $record->default)
+                        ->before(function (Model $record) {
+                            User::where('role_id', $record->id)->update(['role_id' => null]);
+                        }),
                 ]),
             ])
             ->bulkActions([

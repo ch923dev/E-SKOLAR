@@ -16,8 +16,10 @@ class ModuleSeeder extends Seeder
     public function run()
     {
         Module::insert([
-            ['module' => Str::plural('Permission')],
-            ['module' => Str::plural('Role')],
+            ['module' => Str::plural('Role'), 'default' => true],
+            ['module' => Str::plural('Module'), 'default' => true],
+            ['module' => Str::plural('Scholar'), 'default' => true],
+            ['module' => Str::plural('User'), 'default' => true],
         ]);
     }
 }
