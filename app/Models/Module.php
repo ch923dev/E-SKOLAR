@@ -42,7 +42,7 @@ class Module extends Model
 
     public function roles()
     {
-        return $this->belongsToMany(Role::class);
+        return $this->belongsToMany(Role::class)->withPivot('level');
     }
     public function roles_manage()
     {

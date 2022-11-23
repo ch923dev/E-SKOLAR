@@ -5,7 +5,6 @@ namespace App\Filament\Resources;
 use AlperenErsoy\FilamentExport\Actions\FilamentExportHeaderAction;
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
-use App\Filament\Trait\Permits;
 use App\Imports\UsersImport;
 use App\Models\Role;
 use App\Models\User;
@@ -32,7 +31,6 @@ use Filament\Tables\Filters\SelectFilter;
 
 class UserResource extends Resource
 {
-    use Permits;
     protected static ?string $model = User::class;
     protected static ?string $modelLabel = 'User';
     protected static ?string $pluralModelLabel = 'Users';
@@ -49,33 +47,6 @@ class UserResource extends Resource
     {
         return $table
             ->headerActions([
-                // FilamentExportHeaderAction::make('export')
-                //     ->disablePreview()
-                //     ->disableAdditionalColumns()
-                //     ->button(),
-                // Action::make('import')
-                    // ->action(function (array $data) {
-                    //     $import = new UsersImport();
-                    //     $import->import('storage/' . $data['file']);
-                    //     Notification::make()
-                    //         ->title('Successfully Imported')
-                    //         ->success()
-                    //         ->send();
-                    //     if (count($import->failures()) > 0)
-                    //         Notification::make()
-                    //             ->title(count($import->failures()) . ' failed to be imported')
-                    //             ->danger()
-                    //             ->send();
-                    // })
-                    // ->form([
-                    //     Forms\Components\FileUpload::make('file')
-                    //         ->required()
-                    // ])
-                    // ->hidden(function () {
-                    //     return auth()->user()->permissions->where('name', 'Manage Users')->first() ? false : true;
-                    // })
-                    // ->button()
-                    // ->icon('heroicon-o-upload')
             ])
             ->columns([
                 ImageColumn::make('avatar_url')
@@ -102,18 +73,11 @@ class UserResource extends Resource
             ])
             ->actions([
                 ActionGroup::make([
-                    Tables\Actions\ViewAction::make()
-                        ->visible(static::can_view(static::$pluralModelLabel)),
-                    Tables\Actions\EditAction::make()
-                        ->visible(static::can_manage(static::$pluralModelLabel)),
-                    Tables\Actions\DeleteAction::make()
-                        ->visible(static::can_manage(static::$pluralModelLabel)),
                 ]),
 
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make()
-                    ->visible(static::can_manage(static::$pluralModelLabel)),
             ]);
     }
     public static function getFormSchema()
@@ -124,7 +88,7 @@ class UserResource extends Resource
                     Forms\Components\TextInput::make('name')
                         ->required(),
                     Forms\Components\TextInput::make('email')
-                        ->unique(User::class, 'email', fn ($record) => $record)
+                        ->unique(User::class, 'email', fn($record) => $record)
                         ->email()
                         ->required(),
                     Forms\Components\Select::make('role_id')
@@ -132,7 +96,7 @@ class UserResource extends Resource
                         ->label('Role')
                         ->required(),
                     Forms\Components\TextInput::make('contact_number')
-                        ->mask(fn (TextInput\Mask $mask) => $mask->pattern('+{639} 000 000 000'))
+                        ->mask(fn(TextInput\Mask $mask) => $mask->pattern('+{639} 000 000 000'))
                 ])->columns(2)->columnSpan(3),
                 Card::make([
                     Placeholder::make('Avatar'),
