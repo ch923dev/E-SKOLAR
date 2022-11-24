@@ -106,7 +106,6 @@ class ModuleResource extends Resource
             RelationManagers\RolesRelationManager::class,
         ];
     }
-    #[ArrayShape(['index' => "string[]", 'view' => "string[]"])]
     public static function getPages(): array
     {
         return [
