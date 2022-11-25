@@ -12,11 +12,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-
+use Illuminate\Support\Str;
 class User extends Authenticatable implements FilamentUser, HasAvatar
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    public static function moduleName() : string
+    {
+        return Str::plural('User');
+    }
     /**
      * The attributes that are mass assignable.
      *
@@ -56,7 +60,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     }
     public function getFilamentAvatarUrl(): ?string
     {
-        return $this->avatar_url;
+        return '/storage/'.$this->avatar_url;
     }
     public function role()
     {
