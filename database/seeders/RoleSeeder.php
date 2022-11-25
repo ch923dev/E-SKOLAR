@@ -16,6 +16,7 @@ class RoleSeeder extends Seeder
     public function run()
     {
         Role::insert([
+            ['role' => 'Deactivated', 'default' => true],
             ['role' => 'Admin', 'default' => true],
             ['role' => 'Staff', 'default' => true],
             ['role' => 'Scholar', 'default' => true],
