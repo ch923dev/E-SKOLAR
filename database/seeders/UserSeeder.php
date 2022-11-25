@@ -18,14 +18,14 @@ class UserSeeder extends Seeder
     {
         User::factory(10)->create();
         User::factory(10)->create([
-            'role_id' => Role::where('role','Deactivated')->first()->id
+            'role_id' => Role::where('role', 'Deactivated')->first()->id
         ]);
         \App\Models\User::factory()->create([
             'name' => 'Test Admin',
             'email' => 'admin@admin.com',
             'password' => Hash::make('admin123'),
-            'role_id' => Role::where('role','Admin')->first()->id
+            'role_id' => Role::where('role', 'Admin')->first()->id,
+            'default' => true
         ]);
-
     }
 }

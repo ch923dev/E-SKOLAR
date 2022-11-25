@@ -26,6 +26,8 @@ use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\ActionGroup;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Filters\SelectFilter;
 
@@ -48,7 +50,9 @@ class UserResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->headerActions([])
+            ->headerActions([
+                
+            ])
             ->columns([
                 ImageColumn::make('avatar_url')
                     ->circular(),
@@ -76,7 +80,10 @@ class UserResource extends Resource
                     ->label('Role')
             ])
             ->actions([
-
+                ActionGroup::make([
+                    EditAction::make(),
+                    DeleteAction::make()
+                ])
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make()
@@ -84,7 +91,7 @@ class UserResource extends Resource
     }
     public static function getEloquentQuery(): Builder
     {
-        return static::getModel()::whereNot('role_id', Role::where('role', 'Scholar')->pluck('id','id'))
+        return static::getModel()::whereNot('role_id', Role::where('role', 'Scholar')->pluck('id', 'id'))
             ->whereNot('role_id', Role::where('role', 'Organization')->pluck('id', 'id'));
     }
     public static function getRelations(): array
