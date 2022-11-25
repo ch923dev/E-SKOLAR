@@ -41,13 +41,14 @@ class UserResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema(static::getFormSchema());
+            ->schema(
+                []
+            );
     }
     public static function table(Table $table): Table
     {
         return $table
-            ->headerActions([
-            ])
+            ->headerActions([])
             ->columns([
                 ImageColumn::make('avatar_url')
                     ->circular(),
@@ -55,70 +56,36 @@ class UserResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('role.role')->label('Role'),
+                Tables\Columns\TextColumn::make('role.role')
+                    ->label('Role'),
                 Tables\Columns\TextColumn::make('contact_number')
                     ->formatStateUsing(function ($state) {
-                        return $state ? $state : 'No Contact Number';
+                        return $state ?? 'No Contact Number';
                     })
                     ->label('Contact Number'),
             ])
             ->filters([
                 SelectFilter::make('roles')
                     ->multiple()
-                    ->options(Role::whereNot('role', '=', 'Scholar')
-                        ->whereNot('role', '=', 'Organization')
-                        ->pluck('role', 'id'))
+                    ->options(
+                        Role::whereNot('role', '=', 'Scholar')
+                            ->whereNot('role', '=', 'Organization')
+                            ->pluck('role', 'id')
+                    )
                     ->attribute('role.role')
                     ->label('Role')
             ])
             ->actions([
-                ActionGroup::make([
-                ]),
 
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make()
             ]);
     }
-    public static function getFormSchema()
-    {
-        return
-            Group::make([
-                Card::make([
-                    Forms\Components\TextInput::make('name')
-                        ->required(),
-                    Forms\Components\TextInput::make('email')
-                        ->unique(User::class, 'email', fn($record) => $record)
-                        ->email()
-                        ->required(),
-                    Forms\Components\Select::make('role_id')
-                        ->options(Role::whereNot('role', 'Organization')->whereNot('role', 'Scholar')->pluck('role', 'id'))
-                        ->label('Role')
-                        ->required(),
-                    Forms\Components\TextInput::make('contact_number')
-                        ->mask(fn(TextInput\Mask $mask) => $mask->pattern('+{639} 000 000 000'))
-                ])->columns(2)->columnSpan(3),
-                Card::make([
-                    Placeholder::make('Avatar'),
-                    FileUpload::make('avatar_url')
-                        ->avatar()
-                        ->label('Avatar')
-                ])->columnSpan(1),
-            ])->columns(4);
-    }
     public static function getEloquentQuery(): Builder
     {
-        // dd(Role::where('name', 'Scholar')->first()->id);
-        return static::getModel()::query()
-            ->whereNot('id', '=', auth()->user()->id)
-            ->whereNot(
-                'role_id',
-                Role::where('role', 'Scholar')->first()->id,
-            )
-            ->whereNot(
-                'role_id',
-                Role::where('role', 'Organization')->first()->id
-            );
+        return static::getModel()::whereNot('role_id', Role::where('role', 'Scholar')->pluck('id','id'))
+            ->whereNot('role_id', Role::where('role', 'Organization')->pluck('id', 'id'));
     }
     public static function getRelations(): array
     {
