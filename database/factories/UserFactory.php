@@ -19,11 +19,12 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
+            'avatar_url' => 'pngtree-blue-default-avatar-png-image_2813123.jpg',
             'name' => fake()->name(),
             'email' => fake()->safeEmail(),
             'email_verified_at' => now(),
             'password' => Hash::make('password'), // password
-            'role_id' => fake()->numberBetween(1,2),
+            'role_id' => fake()->numberBetween(1,5),
             'contact_number'=>fake('en_PH')->mobileNumber()
         ];
     }
