@@ -26,12 +26,7 @@ class ManageUser extends ManageRecords
     protected function getTableHeaderActions(): array
     {
         return [
-            FilamentExportHeaderAction::make('export')
-            // ImportAction::make()
-            //     ->fields([
-            //         ImportField::make('name')
-            //             ->label('Name'),
-            //     ])
+            FilamentExportHeaderAction::make('export')->button()
         ];
     }
     protected function getActions(): array
@@ -39,8 +34,7 @@ class ManageUser extends ManageRecords
         return [
             ImportAction::make()
                 ->uniqueField('email')
-                ->mutateBeforeCreate(function($data)
-                {
+                ->mutateBeforeCreate(function ($data) {
                     $data['password'] = Hash::make(Str::random(8));
                     return $data;
                 })
