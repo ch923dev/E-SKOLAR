@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\UserResource\Pages;
 
+use AlperenErsoy\FilamentExport\Actions\FilamentExportHeaderAction;
 use App\Filament\Resources\UserResource;
 use App\Models\Role;
 use App\Models\User;
@@ -15,14 +16,49 @@ use Filament\Pages\Actions;
 use Filament\Resources\Pages\ManageRecords;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Konnco\FilamentImport\Actions\ImportAction;
+use Konnco\FilamentImport\Actions\ImportField;
 
 class ManageUser extends ManageRecords
 {
     protected static string $resource = UserResource::class;
 
+    protected function getTableHeaderActions(): array
+    {
+        return [
+            FilamentExportHeaderAction::make('export')
+            // ImportAction::make()
+            //     ->fields([
+            //         ImportField::make('name')
+            //             ->label('Name'),
+            //     ])
+        ];
+    }
     protected function getActions(): array
     {
         return [
+            ImportAction::make()
+                ->uniqueField('email')
+                ->mutateBeforeCreate(function($data)
+                {
+                    $data['password'] = Hash::make(Str::random(8));
+                    return $data;
+                })
+                ->fields([
+                    ImportField::make('name')
+                        ->label('Name')
+                        ->required(),
+                    ImportField::make('email')
+                        ->label('Email')
+                        ->required(),
+                    ImportField::make('role_id')
+                        ->mutateBeforeCreate(fn ($string) => Role::where('role', $string)->first()->id)
+                        ->label('Role')
+                        ->required(),
+                    ImportField::make('contact_number')
+                        ->label('Contact Number')
+                        ->required(),
+                ]),
             Actions\CreateAction::make()
                 ->disableCreateAnother()
                 ->mutateFormDataUsing(function (array $data) {

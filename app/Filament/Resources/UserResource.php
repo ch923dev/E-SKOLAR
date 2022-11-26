@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use AlperenErsoy\FilamentExport\Actions\FilamentExportBulkAction;
 use AlperenErsoy\FilamentExport\Actions\FilamentExportHeaderAction;
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
@@ -51,7 +52,7 @@ class UserResource extends Resource
     {
         return $table
             ->headerActions([
-                
+
             ])
             ->columns([
                 ImageColumn::make('avatar_url')
@@ -86,7 +87,9 @@ class UserResource extends Resource
                 ])
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make()
+                Tables\Actions\DeleteBulkAction::make(),
+                FilamentExportBulkAction::make('export')->disablePreview()
+
             ]);
     }
     public static function getEloquentQuery(): Builder
