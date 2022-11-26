@@ -51,10 +51,8 @@ class RoleResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ActionGroup::make([
-                    Tables\Actions\EditAction::make()
-                        ->hidden(fn (Model $record) => $record->default),
+                    Tables\Actions\EditAction::make(),
                     Tables\Actions\DeleteAction::make()
-                        ->hidden(fn (Model $record) => $record->default)
                         ->before(function (Model $record) {
                             User::where('role_id', $record->id)->update(['role_id' => null]);
                         }),
@@ -63,14 +61,9 @@ class RoleResource extends Resource
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make()
                     ->action(function (Collection $records) {
-                        $notif = false;
                         foreach ($records as $value) {
-                            if (!$value->default) {
-                                $records->find($value->id)->delete();
-                            } else {
-                                $notif = true;
-                            }
-                            if ($notif) {
+                            $notif = !$value->default ? $records->find($value->id)->delete() : true;
+                            if ($notif==true) {
                                 Notification::make()
                                     ->title('You cannot delete default roles')
                                     ->icon('heroicon-o-lock-closed')
