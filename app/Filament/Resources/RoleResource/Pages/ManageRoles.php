@@ -80,7 +80,7 @@ class ManageRoles extends ManageRecords
                                 ->label('List of Users')
                                 ->schema([
                                     Forms\Components\Select::make('user_id')
-                                        ->options(User::whereNull('role_id')->pluck('name', 'id'))
+                                        ->options(User::where('role_id', Role::where('role', 'Deactivated')->first()->id)->pluck('name', 'id'))
                                         ->label('User\'s Name'),
                                 ])
                         ])
