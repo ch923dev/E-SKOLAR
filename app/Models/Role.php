@@ -15,7 +15,7 @@ class Role extends Model
     {
         return Str::plural('Role');
     }
-
+    public static string $model_name = 'Role';
     /**
      * Indicates if the model should be timestamped.
      *
