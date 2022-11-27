@@ -31,6 +31,7 @@ class RoleResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('role')
                     ->unique(table: Role::class, column: 'role')
+                    ->label('Role Name')
                     ->required()
             ]);
     }
