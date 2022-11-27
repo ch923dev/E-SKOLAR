@@ -10,12 +10,10 @@ class Role extends Model
 {
     use HasFactory;
 
-
     public static function moduleName() : string
     {
         return Str::plural('Role');
     }
-    public static string $model_name = 'Role';
     /**
      * Indicates if the model should be timestamped.
      *
