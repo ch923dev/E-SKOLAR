@@ -4,18 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Sponsor extends Model
 {
     use HasFactory;
-
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['name','sponsor_category_id'];
+    protected $fillable = ['sponsor'];
+
     /**
      * Indicates if the model should be timestamped.
      *
@@ -23,7 +24,8 @@ class Sponsor extends Model
      */
     public $timestamps = false;
 
-    public function sponsor_category(): BelongsTo{
-        return $this->belongsTo(SponsorCategory::class);
+    public function scholarship_programs(): HasMany
+    {
+        return $this->hasMany(ScholarshipProgram::class);
     }
 }
