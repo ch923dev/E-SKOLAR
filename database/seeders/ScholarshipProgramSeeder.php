@@ -2,11 +2,12 @@
 
 namespace Database\Seeders;
 
+use App\Models\ScholarshipProgram;
 use App\Models\Sponsor;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class SponsorSeeder extends Seeder
+class ScholarshipProgramSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,8 +16,8 @@ class SponsorSeeder extends Seeder
      */
     public function run()
     {
-        Sponsor::insert([
-            ['sponsor' => 'City Scholarship Office']
+        ScholarshipProgram::insert([
+            ['name' => 'City Scholars', 'sponsor_id' => Sponsor::where('sponsor', 'City Scholarship Office')->first()->id]
         ]);
     }
 }

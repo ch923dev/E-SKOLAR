@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -19,6 +18,8 @@ class DatabaseSeeder extends Seeder
             ModuleSeeder::class,
             ModuleRoleSeeder::class,
             UserSeeder::class,
+            SponsorSeeder::class,
+            ScholarshipProgramSeeder::class
         ]);
     }
 }
