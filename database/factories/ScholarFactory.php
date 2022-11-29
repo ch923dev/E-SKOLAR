@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Baranggay;
+use App\Models\Program;
 use App\Models\Role;
 use App\Models\ScholarshipProgram;
 use App\Models\User;
@@ -24,7 +25,8 @@ class ScholarFactory extends Factory
             'user_id' => User::factory()->create(['role_id' => Role::where('role', 'Scholar')->first()->id]),
             'baranggay_id' => Baranggay::inRandomOrder()->first(),
             'status' => fake()->numberBetween(1, 4),
-            'scholarship_program_id'=> ScholarshipProgram::inRandomOrder()->first()
+            'scholarship_program_id'=> ScholarshipProgram::inRandomOrder()->first(),
+            'program_id'=> Program::inRandomOrder()->first()
         ];
     }
 }

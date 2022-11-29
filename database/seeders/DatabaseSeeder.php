@@ -21,6 +21,8 @@ class DatabaseSeeder extends Seeder
             SponsorSeeder::class,
             ScholarshipProgramSeeder::class,
             BaranggaySeeder::class,
+            CollegeSeeder::class,
+            ProgramSeeder::class,
             ScholarSeeder::class
         ]);
     }
