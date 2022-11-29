@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Konnco\FilamentImport\Actions\ImportAction;
 use Konnco\FilamentImport\Actions\ImportField;
+use Ysfkaya\FilamentPhoneInput\PhoneInput;
+use Ysfkaya\FilamentPhoneInput\PhoneInputNumberType;
 
 class ManageUser extends ManageRecords
 {
@@ -72,8 +74,10 @@ class ManageUser extends ManageRecords
                                 ->options(Role::whereNot('role', 'Organization')->whereNot('role', 'Scholar')->pluck('role', 'id'))
                                 ->label('Role')
                                 ->required(),
-                            TextInput::make('contact_number')
-                                ->mask(fn (TextInput\Mask $mask) => $mask->pattern('+{639} 000 000 000'))
+                            PhoneInput::make('contact_number')
+                                ->initialCountry('ph')
+                                ->disallowDropdown()
+                                ->separateDialCode(true),
                         ])->columns(2)->columnSpan(3),
                         Card::make([
                             Placeholder::make('Avatar'),
