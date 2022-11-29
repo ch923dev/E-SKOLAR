@@ -23,7 +23,7 @@ class ScholarshipProgram extends Model
      *
      * @var array
      */
-    protected $fillable = ['name','scholarship_program_id'];
+    protected $fillable = ['name','sponsor_id'];
 
     public function sponsor(): BelongsTo
     {

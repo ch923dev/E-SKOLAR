@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Baranggay;
+use App\Models\ScholarshipProgram;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -20,6 +21,7 @@ return new class extends Migration
             $table->foreignIdFor(User::class);
             $table->integer('status')->comment('1. Pending, 2. Inactive 3. Active 4. Graduate');
             $table->foreignIdFor(Baranggay::class);
+            $table->foreignIdFor(ScholarshipProgram::class);
             $table->timestamps();
         });
     }

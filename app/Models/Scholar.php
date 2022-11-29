@@ -15,7 +15,7 @@ class Scholar extends Model
      *
      * @var array
      */
-    protected $fillable = ['user_id','status','baranggay_id'];
+    protected $fillable = ['user_id','status','baranggay_id','scholarship_program_id'];
 
     public function user(): BelongsTo
     {
@@ -25,5 +25,9 @@ class Scholar extends Model
     public function baranggay(): BelongsTo
     {
         return $this->belongsTo(Baranggay::class);
+    }
+    public function scholarship_program(): BelongsTo
+    {
+        return $this->belongsTo(ScholarshipProgram::class);
     }
 }

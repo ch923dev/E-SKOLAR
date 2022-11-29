@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Baranggay;
 use App\Models\Role;
+use App\Models\ScholarshipProgram;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -21,8 +22,9 @@ class ScholarFactory extends Factory
     {
         return [
             'user_id' => User::factory()->create(['role_id' => Role::where('role', 'Scholar')->first()->id]),
-            'baranggay_id' => Baranggay::inRandomOrder()->first()->id,
-            'status' => 3
+            'baranggay_id' => Baranggay::inRandomOrder()->first(),
+            'status' => fake()->numberBetween(1, 4),
+            'scholarship_program_id'=> ScholarshipProgram::inRandomOrder()->first()
         ];
     }
 }
