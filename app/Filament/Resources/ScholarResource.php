@@ -98,7 +98,7 @@ class ScholarResource extends Resource
                         Forms\Components\Section::make('Scholarship Information')->schema([
                             Forms\Components\Select::make('sponsor_id')
                                 ->label('Sponsor')
-                                ->relationship('sponsor', 'name')
+                                ->relationship('sponsor', 'sponsor')
                                 ->required(),
                             Forms\Components\Select::make('scholar_status_id')
                                 ->label('Scholar Status')
@@ -150,10 +150,10 @@ class ScholarResource extends Resource
                     ->toggleable()
                     ->formatStateUsing(fn ($state) => Str::upper($state))
                     ->label('College'),
-                Tables\Columns\TextColumn::make('sponsor.name')
+                Tables\Columns\TextColumn::make('sponsor.sponsor')
                     ->toggleable()
                     ->tooltip(function (Model $record) {
-                        return Sponsor::find($record->sponsor_id)->name;
+                        return Sponsor::find($record->sponsor_id)->sponsor;
                     })
                     ->limit(30)
                     ->label('Sponsor'),
@@ -219,7 +219,7 @@ class ScholarResource extends Resource
                             );
                     }),
                 MultiSelectFilter::make('sponsor')
-                    ->relationship('sponsor', 'name')
+                    ->relationship('sponsor', 'sponsor')
                     ->label('Sponsor'),
                 MultiSelectFilter::make('year')
                     ->relationship('year', 'year')

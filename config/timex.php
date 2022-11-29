@@ -59,7 +59,7 @@ return [
     'pages' => [
         'timex' => \Buildix\Timex\Pages\Timex::class,
         'slug' => 'timex',
-        'group' => 'timex',
+        'group' => 'events',
         'shouldRegisterNavigation' => true,
         'modalWidth' => 'xl',
         'icon' => [
