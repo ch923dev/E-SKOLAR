@@ -19,7 +19,9 @@ class DatabaseSeeder extends Seeder
             ModuleRoleSeeder::class,
             UserSeeder::class,
             SponsorSeeder::class,
-            ScholarshipProgramSeeder::class
+            ScholarshipProgramSeeder::class,
+            BaranggaySeeder::class,
+            ScholarSeeder::class
         ]);
     }
 }

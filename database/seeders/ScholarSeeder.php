@@ -15,6 +15,6 @@ class ScholarSeeder extends Seeder
      */
     public function run()
     {
-        Scholar::factory(1000)->create();
+        Scholar::factory(100)->create();
     }
 }
