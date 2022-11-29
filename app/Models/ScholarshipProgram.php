@@ -17,9 +17,6 @@ class ScholarshipProgram extends Model
      */
     public $timestamps = false;
 
-    public static function modelName(){
-        return 'Scholarship Program';
-    }
 
     /**
      * The attributes that are mass assignable.
