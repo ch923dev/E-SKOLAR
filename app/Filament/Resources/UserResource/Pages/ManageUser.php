@@ -58,7 +58,7 @@ class ManageUser extends ManageRecords
             Actions\CreateAction::make()
                 ->disableCreateAnother()
                 ->mutateFormDataUsing(function (array $data) {
-                    $data['password'] = Hash::make(Str::random(8));
+                    $data['password'] = Str::slug(Str::before($data['email'], '@') . ' ' . Role::find($data['role_id'])->role);
                     return $data;
                 })
                 ->form([
