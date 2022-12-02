@@ -48,7 +48,7 @@ class UserWelcomeEmail extends Notification
             ->line('The administrator has created an account for you. This email includes your account details. Login to your account using the credentials below, so please keep it safe.')
             ->line('Email: ' . $user->email)
             ->line('Password: ' . Str::slug(Str::before($user->email, '@') . ' ' . Role::find($user->role_id)->role))
-            ->action('Login using this link', url('/'))
+            ->action('Login using this link', url('/admin/login'))
             ->line('Thank you for using our application!');
     }
 
