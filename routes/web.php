@@ -1,6 +1,8 @@
 <?php
 
 use App\Mail\TestMail;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +21,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::get('/mail', function () {
-    Mail::to('cdeasis36@gmail.com')->send(new TestMail());
+    User::where('email','cdeasis923@gmail.com')->delete();
+    User::create([
+        'name' => 'Christian De Asis',
+        'email' => 'cdeasis923@gmail.com',
+        'password' => Hash::make('password'),
+        'role_id' => 1
+    ]);
     return view('welcome');
 });
