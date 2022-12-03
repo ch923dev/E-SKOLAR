@@ -13,6 +13,7 @@ use Filament\Tables;
 use Filament\Tables\Actions\CreateAction;
 use Filament\Tables\Contracts\HasRelationshipTable;
 use Filament\Tables\Filters\MultiSelectFilter;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -95,21 +96,14 @@ class ScholarsRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
-                    ->label('ID'),
                 Tables\Columns\TextColumn::make('user.name')
                     ->searchable()
                     ->label('Name'),
                 Tables\Columns\TextColumn::make('user.email')
                     ->searchable()
                     ->label('Email'),
-                Tables\Columns\TextColumn::make('year.year')
-                    ->label('Year Level'),
             ])
             ->filters([
-                MultiSelectFilter::make('year')
-                    ->relationship('year', 'year')
-                    ->label('Year Level'),
             ])
             ->headerActions([
                 CreateAction::make()

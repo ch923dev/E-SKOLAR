@@ -11,11 +11,11 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
-use Filament\Tables\Filters\Filter;
-use Filament\Tables\Filters\MultiSelectFilter;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use App\Filament\Resources\ProgramResource\RelationManagers;
+use Filament\Tables\Filters\SelectFilter;
+use Webbingbrasil\FilamentAdvancedFilter\Filters\NumberFilter;
 
 class ProgramResource extends Resource
 {
@@ -49,41 +49,22 @@ class ProgramResource extends Resource
                     ->limit(30),
                 Tables\Columns\TextColumn::make('abbre')
                     ->searchable()
-                    ->formatStateUsing(fn ($state) => strtoupper($state))
+                    ->formatStateUsing(fn ($state) => Str::upper($state))
                     ->toggleable()
                     ->label('Abbreviation'),
                 Tables\Columns\TextColumn::make('college.name')
-                    ->tooltip(fn (Model $record) => College::find($record->college_id)->name)
+                    ->tooltip(fn (Model $record) => $record->college->name)
                     ->toggleable()
                     ->limit(30),
                 Tables\Columns\TextColumn::make('scholars_count')
                     ->counts('scholars')
                     ->toggleable()
-                    ->label('Scholars'),
+                    ->label('Total Scholars'),
             ])
             ->filters([
-                MultiSelectFilter::make('college')
+                SelectFilter::make('college')
+                    ->multiple()
                     ->relationship('college', 'name'),
-                Filter::make('scholars_count')
-                    ->form([
-                        TextInput::make('more_than_count')
-                            ->numeric()
-                            ->label('Scholars count more than'),
-                        TextInput::make('less_than_count')
-                            ->numeric()
-                            ->label('Scholars count less than'),
-
-                    ])
-                    ->query(function (Builder $query, array $data): Builder {
-                        return $query
-                            ->when($data['less_than_count'], function (Builder $query, $count) {
-                                return $query->has('scholars', '<', $count);
-                            })
-                            ->when($data['more_than_count'], function (Builder $query, $count) {
-                                return $query->has('scholars', '>', $count);
-                            });;
-                    })
-
             ])
             ->actions([
                 Tables\Actions\ActionGroup::make([
