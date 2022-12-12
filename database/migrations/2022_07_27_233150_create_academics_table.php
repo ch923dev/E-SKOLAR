@@ -15,8 +15,11 @@ return new class extends Migration
     {
         Schema::create('academics', function (Blueprint $table) {
             $table->id();
-            $table->string('year');
+            $table->string('name');
+            $table->date('start');
+            $table->date('end');
             $table->string('semester');
+            $table->boolean('default')->default(false);
         });
     }
 

@@ -51,11 +51,9 @@ class UserResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->headerActions([
-
-            ])
             ->columns([
                 ImageColumn::make('avatar_url')
+                    ->label('Avatar')
                     ->circular(),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),

@@ -21,7 +21,7 @@ class Academic extends Model
      *
      * @var array
      */
-    protected $fillable = ['year', 'semester'];
+    protected $fillable = ['year', 'semester','start','end'];
 
     protected function academicYearSem(): Attribute
     {

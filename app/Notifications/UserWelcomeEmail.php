@@ -43,6 +43,7 @@ class UserWelcomeEmail extends Notification
     public function toMail($notifiable)
     {
         $user = $notifiable;
+        // return (new MailMessage)->view('vendor.notifications.text');
         return (new MailMessage)
             ->greeting('Hello ' . Str::before($user->name, ' ') . ',')
             ->line('The administrator has created an account for you. This email includes your account details. Login to your account using the credentials below, so please keep it safe.')
