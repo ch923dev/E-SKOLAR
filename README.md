@@ -42,7 +42,7 @@
 
 ## 3.1 **Laravel**
 
-- run ``` composer update ```
+- run ``` composer install ```
 - copy ``` .env.example ``` file to ``` .env ```
 - configure ``` .env ``` file
 - run ``` php artisan migrate:fresh --seed ```
