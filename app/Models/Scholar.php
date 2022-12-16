@@ -15,7 +15,7 @@ class Scholar extends Model
      *
      * @var array
      */
-    protected $fillable = ['user_id','status','baranggay_id','scholarship_program_id','program_id'];
+    protected $fillable = ['user_id','status','baranggay_id','scholarship_program_id','program_id','fname','lname'];
 
     public function user(): BelongsTo
     {

@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ImportController;
+use App\Models\Scholar;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,4 +21,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('user-import',[ImportController::class,'import']);
+Route::get('users',function(){
+    $users = cache()->remember('scholar',20,function(){
+        return Scholar::all();
+    });
+    return $users;
+});

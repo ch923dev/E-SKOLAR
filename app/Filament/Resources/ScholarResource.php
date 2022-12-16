@@ -21,11 +21,13 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
 use Closure;
+use Filament\Tables\Actions\ActionGroup;
 use Illuminate\Support\Arr;
 
 class ScholarResource extends Resource
 {
     protected static ?string $model = Scholar::class;
+    protected static ?string $modelLabel = 'Scholar';
 
     protected static ?string $navigationGroup = 'Scholarships Management';
     protected static ?string $navigationIcon = 'fas-user-tie';
@@ -33,9 +35,7 @@ class ScholarResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                //
-            ]);
+            ->schema([]);
     }
 
     public static function table(Table $table): Table
@@ -48,6 +48,7 @@ class ScholarResource extends Resource
                 TextColumn::make('baranggay.name')
                     ->label('Baranggay'),
                 BadgeColumn::make('status')
+                    ->sortable()
                     ->enum([
                         '1' => 'Pending',
                         '2' => 'Inactive',
@@ -62,6 +63,7 @@ class ScholarResource extends Resource
                         'success' => static fn ($state): bool => $state == '4',
                     ]),
                 TextColumn::make('scholarship_program.name')
+                    ->sortable()
                     ->label('Scholarship Program'),
                 TextColumn::make('program.abbre')
                     ->formatStateUsing(fn ($state) => Str::upper($state))
@@ -145,8 +147,10 @@ class ScholarResource extends Resource
                     }),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                ActionGroup::make([
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),

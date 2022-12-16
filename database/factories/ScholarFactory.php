@@ -21,8 +21,13 @@ class ScholarFactory extends Factory
      */
     public function definition()
     {
+        $fname = fake()->firstName();
+        $lname = fake()->lastName();
+        $name = $fname.' '.$lname;
         return [
-            'user_id' => User::factory()->create(['role_id' => Role::where('role', 'Scholar')->first()->id]),
+            'fname'=> $fname,
+            'lname'=> $lname,
+            'user_id' => User::factory()->create(['role_id' => Role::where('role', 'Scholar')->first()->id,'name'=>$name]),
             'baranggay_id' => Baranggay::inRandomOrder()->first(),
             'status' => fake()->numberBetween(1, 4),
             'scholarship_program_id'=> ScholarshipProgram::inRandomOrder()->first(),

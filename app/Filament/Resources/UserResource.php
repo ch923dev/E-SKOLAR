@@ -87,13 +87,12 @@ class UserResource extends Resource
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
                 FilamentExportBulkAction::make('export')->disablePreview()
-
             ]);
     }
+    
     public static function getEloquentQuery(): Builder
     {
-        return static::getModel()::whereNot('role_id', Role::where('role', 'Scholar')->pluck('id', 'id'))
-            ->whereNot('role_id', Role::where('role', 'Organization')->pluck('id', 'id'));
+        return static::getModel()::get_users();
     }
     public static function getRelations(): array
     {

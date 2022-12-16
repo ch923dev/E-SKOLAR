@@ -58,6 +58,10 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
         return true;
         // return$this->hasVerifiedEmail();
     }
+    public static function get_users(){
+        return static::whereNot('role_id', Role::where('role', 'Scholar')->pluck('id', 'id'))
+        ->whereNot('role_id', Role::where('role', 'Organization')->pluck('id', 'id'));
+    }
     public function getFilamentAvatarUrl(): ?string
     {
         return '/storage/'.$this->avatar_url;

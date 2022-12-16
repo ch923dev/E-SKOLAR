@@ -19,6 +19,8 @@ return new class extends Migration
     {
         Schema::create('scholars', function (Blueprint $table) {
             $table->id();
+            $table->string('fname');
+            $table->string('lname');
             $table->foreignIdFor(User::class);
             $table->integer('status')->comment('1. Pending, 2. Inactive 3. Active 4. Graduate');
             $table->foreignIdFor(Baranggay::class);
