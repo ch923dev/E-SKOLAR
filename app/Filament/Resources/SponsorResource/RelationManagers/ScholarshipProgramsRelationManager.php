@@ -2,11 +2,13 @@
 
 namespace App\Filament\Resources\SponsorResource\RelationManagers;
 
-use Filament\Forms;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
+
 class ScholarshipProgramsRelationManager extends RelationManager
 {
     protected static string $relationship = 'scholarship_programs';
@@ -19,9 +21,9 @@ class ScholarshipProgramsRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
+                TextInput::make('name')
+                    ->unique()
+                    ->required(),
             ]);
     }
 
@@ -29,14 +31,18 @@ class ScholarshipProgramsRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->searchable(),
+                TextColumn::make('scholars_count')
+                    ->counts('scholars')
+                    ->label('Total Scholars'),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()
+                    ->disableCreateAnother(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

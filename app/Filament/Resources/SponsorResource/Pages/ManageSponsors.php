@@ -31,6 +31,7 @@ class ManageSponsors extends ManageRecords
                                 ->relationship('scholarship_programs')
                                 ->schema([
                                     TextInput::make('name')
+                                        ->unique()
                                         ->label('Sponsor')
                                         ->required()
                                 ])

@@ -39,8 +39,13 @@ class SponsorResource extends Resource
                     ->label('Sponsor Name')
                     ->searchable(),
                 TextColumn::make('scholarship_programs_count')
+                    ->sortable()
                     ->counts('scholarship_programs')
-                    ->label('Total Scholarship Program')
+                    ->label('Total Scholarship Programs'),
+                TextColumn::make('scholars_count')
+                    ->sortable()
+                    ->counts('scholars')
+                    ->label('Total Scholars')
             ])
             ->filters([
                 //
@@ -57,7 +62,8 @@ class SponsorResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\ScholarshipProgramsRelationManager::class
+            RelationManagers\ScholarshipProgramsRelationManager::class,
+            RelationManagers\ScholarsRelationManager::class,
         ];
     }
     public static function getPages(): array

@@ -25,7 +25,7 @@ class ScholarshipOrganization extends Model
      */
     public $timestamps = false;
 
-    public function scholarship_program() : BelongsToMany {
+    public function scholarship_programs() : BelongsToMany {
         return $this->belongsToMany(ScholarshipProgram::class);
     }
 }

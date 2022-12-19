@@ -3,7 +3,9 @@
 namespace App\Filament\Resources\ScholarshipOrganizationResource\Pages;
 
 use App\Filament\Resources\ScholarshipOrganizationResource;
+use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Wizard\Step;
 use Filament\Pages\Actions;
@@ -21,19 +23,17 @@ class ManageScholarshipOrganizations extends ManageRecords
                     Step::make('Scholarship Organization')
                         ->schema([
                             TextInput::make('name')
-                                ->label('Scholarship Organization Name')
+                                ->label('Name')
+                                ->required(),
+                            TextInput::make('abbre')
+                                ->unique()
+                                ->label('Abbreviation')
                                 ->required(),
                         ]),
                     Step::make('Scholarship Program')
                         ->schema([
-                            Repeater::make('scholarship_programs')
-                                ->label('Scholarship Programs')
-                                ->relationship('scholarship_programs')
-                                ->schema([
-                                    TextInput::make('name')
-                                        ->label('Program')
-                                        ->required()
-                                ])
+                            CheckboxList::make('scholarship_programs')
+                                ->relationship('scholarship_programs', 'name')
                         ])
                 ])
         ];

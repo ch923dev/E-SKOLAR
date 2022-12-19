@@ -12,6 +12,7 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -20,30 +21,27 @@ class ScholarshipOrganizationResource extends Resource
     protected static ?string $model = ScholarshipOrganization::class;
 
     protected static ?string $modelLabel = "Scholarship Organization";
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'fas-sitemap';
+    protected static ?string $navigationGroup = 'Scholarships Management';
 
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                TextInput::make('name')
-                    ->unique(column: 'name')
-                    ->required(),
-                TextInput::make('abbre')
-                    ->unique(column: 'abbre')
-                    ->required(),
-                Select::make('scholarship_program')
-                    ->multiple()
-                    ->label('Scholarship Program')
-                    ->relationship('scholarship_program', 'name')
-                    ->required()
-            ]);
+            ->schema([]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
-            ->columns([])
+            ->columns([
+                TextColumn::make('name')
+                    ->label('Name'),
+                TextColumn::make('abbre')
+                    ->label('Abbreviation'),
+                TextColumn::make('scholarship_programs_count')
+                    ->counts('scholarship_programs')
+                    ->label('Total Scholarship Programs')
+            ])
             ->filters([
                 //
             ])

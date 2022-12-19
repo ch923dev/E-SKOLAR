@@ -40,6 +40,8 @@ class ScholarResource extends Resource
 
     public static function table(Table $table): Table
     {
+        $colleges = College::all();
+        $colleges = $colleges->pluck('name','id');
         return $table
             ->columns([
                 TextColumn::make('user.name')
@@ -90,7 +92,7 @@ class ScholarResource extends Resource
                 Filter::make('program')
                     ->form([
                         Select::make('college')
-                            ->options(College::query()->pluck('name', 'id'))
+                            ->options($colleges)
                             ->afterStateUpdated(function ($component) {
                                 $component->getContainer()->getComponents()[1]->fillStateWithNull();
                             })
@@ -134,7 +136,7 @@ class ScholarResource extends Resource
                         $colleges = [];
                         $programs = [];
                         if ($data['college'] ?? null)
-                            $colleges[] = Str::upper(College::where('id', $data['college'])->first()->abbre);
+                            $colleges[] = Str::upper(College::cacheFor(now()->addMinutes(1))->where('id', $data['college'])->first()->abbre);
 
                         if ($data['program'] ?? null)
                             foreach ($data['program'] as $value)
@@ -156,7 +158,10 @@ class ScholarResource extends Resource
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
-
+    public static function getEloquentQuery(): Builder
+    {
+        return static::getModel()::cacheFor(now()->addMinute(1));
+    }
     public static function getPages(): array
     {
         return [

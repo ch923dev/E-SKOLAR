@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-
 class Scholar extends Model
 {
     use HasFactory;
@@ -15,6 +14,9 @@ class Scholar extends Model
      *
      * @var array
      */
+
+
+    public $cacheDriver = 'file';
     protected $fillable = ['user_id','status','baranggay_id','scholarship_program_id','program_id','fname','lname'];
 
     public function user(): BelongsTo
