@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\ScholarshipProgram;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -23,7 +24,9 @@ class DatabaseSeeder extends Seeder
             BaranggaySeeder::class,
             CollegeSeeder::class,
             ProgramSeeder::class,
-            ScholarSeeder::class
+            ScholarSeeder::class,
+            ScholarshipOrganizationSeeder::class,
+            ScholarshipOrganizationScholarshipProgramSeeder::class
         ]);
     }
 }
