@@ -26,6 +26,7 @@ use Ysfkaya\FilamentPhoneInput\PhoneInput;
 class ScholarsRelationManager extends RelationManager
 {
     protected static string $relationship = 'scholars';
+    protected static ?string $modelLabel = 'Scholar';
 
     protected static ?string $recordTitleAttribute = 'status';
 
@@ -85,64 +86,62 @@ class ScholarsRelationManager extends RelationManager
             ->headerActions([
                 Tables\Actions\CreateAction::make()
                     ->using(function ($livewire, $data) {
-                        dd( $livewire->getRelationship());
                         $data['user']['avatar_url'] = 'pngtree-blue-default-avatar-png-image_2813123.jpg';
                         $data['user']['name'] = $data['fname'] . ' ' . $data['lname'];
                         $data['user']['password'] =  Hash::make(Carbon::now()->year . '-' . $data['lname']);
                         $data['user']['role_id'] = Role::where('role', 'Scholar')->first()->id;
 
-                        // $user = User::create([
-                        //     'avatar_url' => 'pngtree-blue-default-avatar-png-image_2813123.jpg',
-                        //     'email' => $data['user']['email'],
-                        //     'contact_number' => $data['user']['contact_number'],
-                        //     'name' => $data['fname'] . ' ' . $data['lname'],
-                        //     'role_id' => Role::where('role', 'Scholar')->first()->id,
-                        //     'password' => Hash::make(Carbon::now()->year . '-' . $data['lname']),
-                        // ]);
-                        // $data['user_id'] = $user->id;
+                        $user = User::create([
+                            'avatar_url' => 'pngtree-blue-default-avatar-png-image_2813123.jpg',
+                            'email' => $data['user']['email'],
+                            'contact_number' => $data['user']['contact_number'],
+                            'name' => $data['fname'] . ' ' . $data['lname'],
+                            'role_id' => Role::where('role', 'Scholar')->first()->id,
+                            'password' => Hash::make(Carbon::now()->year . '-' . $data['lname']),
+                        ]);
+                        $data['user_id'] = $user->id;
                         $data['status'] = 3;
-                        dd( $livewire->getRelationship());
-                        return $livewire->getRelationship()->user()->create($data)->create($data);
+                        return $livewire->getRelationship()->create($data);
                     })
                     ->steps([
-                        // Step::make('Scholar Information')
-                            // ->schema([
-                            //     Section::make('Personal Details')
-                            //         ->schema([
-                            //             Group::make([
-                            //                 TextInput::make('fname')
-                            //                     ->label('First Name')
-                            //                     ->required(),
-                            //                 TextInput::make('lname')
-                            //                     ->label('Last Name')
-                            //                     ->required(),
-                            //                 TextInput::make('user.email')
-                            //                     ->unique(User::class, 'email')
-                            //                     ->label('Email')
-                            //                     ->email()
-                            //                     ->required(),
-                            //                 PhoneInput::make('user.contact_number')
-                            //                     ->required()
-                            //                     ->initialCountry('ph')
-                            //                     ->disallowDropdown()
-                            //                     ->separateDialCode(true)
-                            //             ])->columns(2),
-                            //             Select::make('baranggay_id')
-                            //                 ->relationship('baranggay', 'name')
-                            //                 ->required()
-                            //                 ->label('Baranggay'),
-                            //         ]),
+                        Step::make('Scholar Information')
+                            ->schema([
+                                Section::make('Personal Details')
+                                    ->schema([
+                                        Group::make([
+                                            TextInput::make('fname')
+                                                ->label('First Name')
+                                                ->required(),
+                                            TextInput::make('lname')
+                                                ->label('Last Name')
+                                                ->required(),
+                                            TextInput::make('user.email')
+                                                ->unique(User::class, 'email')
+                                                ->label('Email')
+                                                ->email()
+                                                ->required(),
+                                            PhoneInput::make('user.contact_number')
+                                                ->required()
+                                                ->initialCountry('ph')
+                                                ->disallowDropdown()
+                                                ->separateDialCode(true)
+                                        ])->columns(2),
+                                        Select::make('baranggay_id')
+                                            ->relationship('baranggay', 'name')
+                                            ->required()
+                                            ->label('Baranggay'),
+                                    ]),
 
-                            // ]),
-                        // Step::make('Curriculum Details')
-                        //     ->schema([
-                        //         Section::make('Curriculum Details')
-                        //             ->schema([
-                        //                 Select::make('program_id')
-                        //                     ->relationship('program', 'name')
-                        //                     ->required()
-                        //             ]),
-                        //     ]),
+                            ]),
+                        Step::make('Curriculum Details')
+                            ->schema([
+                                Section::make('Curriculum Details')
+                                    ->schema([
+                                        Select::make('program_id')
+                                            ->relationship('program', 'name')
+                                            ->required()
+                                    ]),
+                            ]),
                     ]),
             ])
             ->actions([
