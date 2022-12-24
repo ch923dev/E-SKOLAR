@@ -27,7 +27,15 @@ class ScholarshipOrganizationResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([]);
+            ->schema([
+                TextInput::make('name')
+                    ->label('Name')
+                    ->required(),
+                TextInput::make('abbre')
+                    ->unique()
+                    ->label('Abbreviation')
+                    ->required(),
+            ]);
     }
 
     public static function table(Table $table): Table
@@ -66,6 +74,12 @@ class ScholarshipOrganizationResource extends Resource
         return [
             'index' => Pages\ManageScholarshipOrganizations::route('/'),
             'view' => Pages\ViewScholarshipOrganization::route('/{record}'),
+        ];
+    }
+    public static function getRelations(): array
+    {
+        return [
+            RelationManagers\ScholarsRelationManager::class,
         ];
     }
 }
