@@ -85,23 +85,22 @@ class ScholarsRelationManager extends RelationManager
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
-                    ->using(function ($livewire, $data) {
+                    ->mutateFormDataUsing(function (array $data) {
                         $data['user']['avatar_url'] = 'pngtree-blue-default-avatar-png-image_2813123.jpg';
                         $data['user']['name'] = $data['fname'] . ' ' . $data['lname'];
                         $data['user']['password'] =  Hash::make(Carbon::now()->year . '-' . $data['lname']);
                         $data['user']['role_id'] = Role::where('role', 'Scholar')->first()->id;
-
+                        $data['status'] = 3;
                         $user = User::create([
-                            'avatar_url' => 'pngtree-blue-default-avatar-png-image_2813123.jpg',
+                            'avatar_url' => $data['user']['avatar_url'],
                             'email' => $data['user']['email'],
                             'contact_number' => $data['user']['contact_number'],
-                            'name' => $data['fname'] . ' ' . $data['lname'],
-                            'role_id' => Role::where('role', 'Scholar')->first()->id,
-                            'password' => Hash::make(Carbon::now()->year . '-' . $data['lname']),
+                            'name' => $data['user']['name'],
+                            'role_id' => $data['user']['role_id'],
+                            'password' => $data['user']['password'],
                         ]);
                         $data['user_id'] = $user->id;
-                        $data['status'] = 3;
-                        return $livewire->getRelationship()->create($data);
+                        return $data;
                     })
                     ->steps([
                         Step::make('Scholar Information')
