@@ -158,10 +158,7 @@ class ScholarResource extends Resource
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
-    public static function getEloquentQuery(): Builder
-    {
-        return static::getModel()::cacheFor(now()->addMinute(1));
-    }
+
     public static function getPages(): array
     {
         return [
