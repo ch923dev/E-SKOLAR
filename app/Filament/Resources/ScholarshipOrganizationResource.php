@@ -38,6 +38,7 @@ class ScholarshipOrganizationResource extends Resource
                     ->searchable()
                     ->label('Name'),
                 TextColumn::make('abbre')
+                    ->searchable()
                     ->label('Abbreviation'),
                 TextColumn::make('scholarship_programs_count')
                     ->sortable()
