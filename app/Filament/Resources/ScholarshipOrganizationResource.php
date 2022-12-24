@@ -76,4 +76,10 @@ class ScholarshipOrganizationResource extends Resource
             'view' => Pages\ViewScholarshipOrganization::route('/{record}'),
         ];
     }
+    public static function getRelations(): array
+    {
+        return [
+            RelationManagers\ScholarsRelationManager::class,
+        ];
+    }
 }
