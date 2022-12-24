@@ -33,6 +33,8 @@ class ManageScholarshipOrganizations extends ManageRecords
                     Step::make('Scholarship Program')
                         ->schema([
                             CheckboxList::make('scholarship_programs')
+                                ->label('Scholarship Program')
+                                ->bulkToggleable()
                                 ->relationship('scholarship_programs', 'name')
                         ])
                 ])
