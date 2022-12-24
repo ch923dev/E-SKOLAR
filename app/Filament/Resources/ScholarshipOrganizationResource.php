@@ -35,12 +35,18 @@ class ScholarshipOrganizationResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->searchable()
                     ->label('Name'),
                 TextColumn::make('abbre')
                     ->label('Abbreviation'),
                 TextColumn::make('scholarship_programs_count')
+                    ->sortable()
                     ->counts('scholarship_programs')
-                    ->label('Total Scholarship Programs')
+                    ->label('Total Scholarship Programs'),
+                TextColumn::make('scholars_count')
+                    ->sortable()
+                    ->counts('scholars')
+                    ->label('Total Scholars'),
             ])
             ->filters([
                 //
@@ -58,6 +64,7 @@ class ScholarshipOrganizationResource extends Resource
     {
         return [
             'index' => Pages\ManageScholarshipOrganizations::route('/'),
+            'view' => Pages\ViewScholarshipOrganization::route('/{record}'),
         ];
     }
 }
