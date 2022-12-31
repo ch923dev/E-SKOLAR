@@ -50,6 +50,7 @@ class UserResource extends Resource
     }
     public static function table(Table $table): Table
     {
+        $roles = Role::getRolesForUsersResource();
         return $table
             ->columns([
                 ImageColumn::make('avatar_url')
@@ -70,11 +71,7 @@ class UserResource extends Resource
             ->filters([
                 SelectFilter::make('roles')
                     ->multiple()
-                    ->options(
-                        Role::whereNot('role', '=', 'Scholar')
-                            ->whereNot('role', '=', 'Organization')
-                            ->pluck('role', 'id')
-                    )
+                    ->options($roles)
                     ->attribute('role.role')
                     ->label('Role')
             ])
@@ -89,7 +86,7 @@ class UserResource extends Resource
                 FilamentExportBulkAction::make('export')->disablePreview()
             ]);
     }
-    
+
     public static function getEloquentQuery(): Builder
     {
         return static::getModel()::get_users();

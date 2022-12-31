@@ -10,7 +10,7 @@ class Role extends Model
 {
     use HasFactory;
 
-    public static function moduleName() : string
+    public static function moduleName(): string
     {
         return Str::plural('Role');
     }
@@ -37,5 +37,10 @@ class Role extends Model
     public function modules()
     {
         return $this->belongsToMany(Module::class)->withPivot('level');
+    }
+    public static function getRolesForUsersResource()
+    {
+        return static::whereNot([['role', '=', 'Scholar'], ['role', '=', 'Organization']])
+            ->pluck('role', 'id');
     }
 }
