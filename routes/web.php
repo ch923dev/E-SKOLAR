@@ -18,10 +18,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+    $query = User::with(['scholarship_program'])->where('role_id', 4);
+    $query->whereRelation('scholarship_program', 'scholarship_programs.sponsor_id', 1)->get();
+
     return view('welcome');
 });
 Route::get('/mail', function () {
-    User::where('email','cdeasis923@gmail.com')->delete();
+    User::where('email', 'cdeasis923@gmail.com')->delete();
     User::create([
         'name' => 'Christian De Asis',
         'email' => 'cdeasis923@gmail.com',

@@ -16,7 +16,6 @@ class Scholar extends Model
      */
 
 
-    public $cacheDriver = 'file';
     protected $fillable = ['user_id','status','baranggay_id','scholarship_program_id','program_id','fname','lname'];
 
     public function user(): BelongsTo
