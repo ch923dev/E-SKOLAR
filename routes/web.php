@@ -1,6 +1,7 @@
 <?php
 
 use App\Mail\TestMail;
+use App\Models\ScholarshipOrganization;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -18,9 +19,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    $query = User::with(['scholarship_program'])->where('role_id', 4);
-    $query->whereRelation('scholarship_program', 'scholarship_programs.sponsor_id', 1)->get();
-
     return view('welcome');
 });
 Route::get('/mail', function () {

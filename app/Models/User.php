@@ -99,4 +99,8 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     {
         return $this->hasOneDeep(College::class, [Scholar::class, Program::class], ['user_id', 'id', 'id'], ['id', 'program_id', 'college_id']);
     }
+    public function sponsor(): HasOneDeep
+    {
+        return $this->hasOneDeep(Sponsor::class, [Scholar::class, ScholarshipProgram::class], ['user_id', 'id', 'id'], ['id', 'scholarship_program_id', 'sponsor_id']);
+    }
 }
