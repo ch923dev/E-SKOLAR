@@ -1,6 +1,7 @@
 <?php
 
 use App\Mail\TestMail;
+use App\Models\ScholarshipOrganization;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -21,7 +22,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::get('/mail', function () {
-    User::where('email','cdeasis923@gmail.com')->delete();
+    User::where('email', 'cdeasis923@gmail.com')->delete();
     User::create([
         'name' => 'Christian De Asis',
         'email' => 'cdeasis923@gmail.com',
