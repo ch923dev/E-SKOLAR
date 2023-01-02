@@ -9,9 +9,11 @@ use App\Models\ScholarshipOrganization;
 use App\Models\ScholarshipProgram;
 use App\Models\User;
 use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Wizard\Step;
 use Filament\Notifications\Actions\Action;
 use Filament\Notifications\Notification;
@@ -58,7 +60,19 @@ class ManageAnnouncements extends ManageRecords
                             TextInput::make('title')
                                 ->required(),
                             MarkdownEditor::make('body')
-                                ->required()
+                                ->required(),
+                            Toggle::make('is_requirement')
+                                ->reactive()
+                                ->label('Requirement'),
+                            Repeater::make('requirements')
+                                ->hidden(fn ($get) => !$get('is_requirement'))
+                                ->relationship()
+                                ->schema([
+                                    TextInput::make('description')
+                                        ->label('Description'),
+                                    TextInput::make('filetypes')
+                                        ->label('File Types'),
+                                ]),
                         ]),
                     Step::make('Recipients')
                         ->schema([
