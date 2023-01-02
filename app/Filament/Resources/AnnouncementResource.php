@@ -15,9 +15,7 @@ use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-
+use Illuminate\Support\Str;
 class AnnouncementResource extends Resource
 {
     protected static ?string $model = Announcement::class;
@@ -36,13 +34,14 @@ class AnnouncementResource extends Resource
                     ])->columnSpan(2)->columns(1),
                     Forms\Components\Card::make()
                         ->schema([
+                            Forms\Components\Placeholder::make('user.name')
+                                ->label('Created: ')
+                                ->content(fn ($record): string => $record->user->name),
                             Forms\Components\Placeholder::make('created_at')
                                 ->label('Created at')
                                 ->content(fn ($record): string => $record->created_at->diffForHumans()),
 
-                            Forms\Components\Placeholder::make('updated_at')
-                                ->label('Last modified at')
-                                ->content(fn ($record): string => $record->updated_at->diffForHumans()),
+
                         ])
                         ->columnSpan(1)
                 ])->columns(3)
@@ -56,7 +55,11 @@ class AnnouncementResource extends Resource
                 TextColumn::make('title')
                     ->searchable(),
                 TextColumn::make('body')
-                    ->html(),
+                    ->limit(20),
+                TextColumn::make('recipients_count')
+                    ->sortable()
+                    ->counts('recipients')
+                    ->label('Recipients')
             ])
             ->filters([
                 //
@@ -73,7 +76,7 @@ class AnnouncementResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\UsersRelationManager::class
         ];
     }
 

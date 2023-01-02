@@ -18,8 +18,12 @@ class Announcement extends Model
      */
     protected $fillable = ['title', 'body','user_id'];
 
-    public function users(): BelongsToMany
+    public function recipients(): BelongsToMany
     {
         return $this->belongsToMany(User::class);
+    }
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }
