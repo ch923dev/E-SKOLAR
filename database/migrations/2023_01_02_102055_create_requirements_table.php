@@ -17,7 +17,7 @@ return new class extends Migration
         Schema::create('requirements', function (Blueprint $table) {
             $table->id();
             $table->string('description');
-            $table->string('filetypes');
+            $table->json('filetypes');
             $table->foreignIdFor(Announcement::class);
         });
     }

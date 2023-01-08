@@ -18,8 +18,8 @@ return new class extends Migration
         Schema::create('requirement_user', function (Blueprint $table) {
             $table->foreignIdFor(Requirement::class);
             $table->foreignIdFor(User::class);
-            $table->string('status');
-            $table->string('document');
+            $table->string('status')->nullable();
+            $table->string('document')->nullable();
         });
     }
 
