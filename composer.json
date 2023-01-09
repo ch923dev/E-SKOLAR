@@ -21,6 +21,7 @@
         "psr/simple-cache": "2.0",
         "rennokki/laravel-eloquent-query-cache": "^3.3",
         "staudenmeir/eloquent-has-many-deep": "^1.7",
+        "xlite-dev/filament-impersonate": "^1.1",
         "ysfkaya/filament-phone-input": "^1.2"
     },
     "require-dev": {

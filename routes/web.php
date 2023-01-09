@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+    dd(User::whereHas('scholar')->get());
     return view('welcome');
 });
 Route::get('/mail', function () {

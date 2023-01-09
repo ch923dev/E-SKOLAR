@@ -4,14 +4,20 @@ namespace App\Filament\Resources\AnnouncementResource\Pages;
 
 use App\Filament\Resources\AnnouncementResource;
 use App\Models\Program;
+use App\Models\Requirement;
 use App\Models\Role;
+use App\Models\Scholar;
 use App\Models\ScholarshipOrganization;
 use App\Models\ScholarshipProgram;
 use App\Models\User;
+use Filament\Forms\Components\Group;
 use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Wizard\Step;
 use Filament\Notifications\Actions\Action;
 use Filament\Notifications\Notification;
@@ -57,8 +63,32 @@ class ManageAnnouncements extends ManageRecords
                         ->schema([
                             TextInput::make('title')
                                 ->required(),
-                            MarkdownEditor::make('body')
-                                ->required()
+                            RichEditor::make('body')
+                                ->required(),
+                            Toggle::make('is_requirement')
+                                ->reactive()
+                                ->label('Requirement'),
+                            Repeater::make('requirements')
+                                ->hidden(fn ($get) => !$get('is_requirement'))
+                                ->label('Requirements')
+                                ->createItemButtonLabel('Add Requirement')
+                                ->schema([
+                                    Group::make([
+                                        TextInput::make('description')
+                                            ->label('Description'),
+                                        Select::make('filetypes')
+                                            ->label('File Types')
+                                            ->multiple()
+                                            ->options([
+                                                'application/pdf' => 'Portable Document Format/PDF',
+                                                'application/vnd.ms-powerpoint' => 'Microsoft PowerPoint',
+                                                'application/vnd.ms-excel' => 'Microsoft Excel',
+                                                'text/csv' => 'Comma-separated values (CSV)',
+                                                'image/jpeg' => 'JPEG images',
+                                                'image/png' => 'PNG images',
+                                            ]),
+                                    ])->columns(2)
+                                ]),
                         ]),
                     Step::make('Recipients')
                         ->schema([
@@ -71,9 +101,15 @@ class ManageAnnouncements extends ManageRecords
                                         ->multiple(),
                                     Select::make('scholarship_organization')
                                         ->label('Scholarship Organization')
-                                        ->multiple()
+                                        ->default(1)
+                                        // ->disabled(fn()=>auth()->user()->role_id === Role::firstWhere('role', 'Organization')->id)
+                                        // ->multiple(fn()=>!auth()->user()->role_id === Role::firstWhere('role', 'Organization')->id)
                                         ->placeholder('All')
                                         ->options(function ($get) {
+                                            $user = auth()->user();
+                                            // if($user->role_id === Role::firstWhere('role', 'Organization')->id){
+                                            //     ScholarshipOrganization::where('')->pluck('name','id');
+                                            // }
                                             return $get('sponsors') ?
                                                 ScholarshipOrganization::whereRelation('sponsors', function (Builder $query) use ($get) {
                                                     return $query->whereIn('sponsor_id', $get('sponsors'));
@@ -120,9 +156,7 @@ class ManageAnnouncements extends ManageRecords
                 ])
                 ->using(function ($data) {
                     $data['user_id'] = auth()->user()->id;
-                    $query = User::with(['scholarship_program', 'program', 'baranggay']);
-                    //Checking if there is roles
-                    $query = $data['users_role'] ? $query->where('role_id', 4) : $query;
+                    $query = User::with(['scholarship_program', 'program', 'baranggay'])->whereHas('scholar');
                     // Check if there is scholarship programs
                     $query = $data['scholarship_programs'] ? $query->{'whereRelation'}('scholarship_program', 'scholarship_programs.id', $data['scholarship_programs']) : $query;
                     // Check if there is programs
@@ -133,6 +167,15 @@ class ManageAnnouncements extends ManageRecords
                     $query = $data['status'] ? $query->{'whereRelation'}('scholar', 'scholars.status', $data['status']) : $query;
 
                     $announcement = static::getModel()::create($data);
+
+                    foreach ($data['requirements'] as $value) {
+                        $requirement = new Requirement();
+                        $requirement->description = $value['description'];
+                        $requirement->filetypes = $value['filetypes'];
+                        $requirement->announcement_id = $announcement->id;
+                        $requirement->save();
+                        $requirement->users()->saveMany($query->get());
+                    }
 
                     Notification::make()
                         ->title($data['title'])
@@ -145,7 +188,7 @@ class ManageAnnouncements extends ManageRecords
                                 )
                         ])
                         ->sendToDatabase($query->get());
-                    $announcement->users()->saveMany($query->get());
+                    $announcement->recipients()->saveMany($query->get());
                     return $announcement;
                 })
         ];

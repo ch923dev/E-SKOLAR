@@ -37,7 +37,7 @@ class ManageModules extends ManageRecords
                         ->description('Give the module a clear and unique name')
                         ->schema([
                             TextInput::make('module')
-                                ->afterStateUpdated(fn ($state, callable $set) => $set('role', Str::plural($state)))
+                                ->afterStateUpdated(fn ($state, callable $set) => $set('module', Str::plural($state)))
                                 ->unique(table: Module::class, column: 'module')
                                 ->required()
                         ]),

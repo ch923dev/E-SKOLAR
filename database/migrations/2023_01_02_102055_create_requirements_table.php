@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\User;
+use App\Models\Announcement;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,11 +14,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('scholarship_organizations', function (Blueprint $table) {
+        Schema::create('requirements', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('abbre');
-            $table->foreignId(User::class);
+            $table->string('description');
+            $table->json('filetypes');
+            $table->foreignIdFor(Announcement::class);
         });
     }
 
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('scholarship_organizations');
+        Schema::dropIfExists('requirements');
     }
 };

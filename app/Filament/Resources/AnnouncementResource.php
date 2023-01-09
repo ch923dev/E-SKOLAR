@@ -5,6 +5,8 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\AnnouncementResource\Pages;
 use App\Filament\Resources\AnnouncementResource\RelationManagers;
 use App\Models\Announcement;
+use App\Models\Role;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Group;
@@ -15,6 +17,7 @@ use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 class AnnouncementResource extends Resource
 {
@@ -56,10 +59,10 @@ class AnnouncementResource extends Resource
                     ->searchable(),
                 TextColumn::make('body')
                     ->limit(20),
-                TextColumn::make('recipients_count')
-                    ->sortable()
-                    ->counts('recipients')
-                    ->label('Recipients')
+                // TextColumn::make('recipients_count')
+                //     ->sortable()
+                //     ->counts('recipients')
+                //     ->label('Recipients')
             ])
             ->filters([
                 //
@@ -72,11 +75,31 @@ class AnnouncementResource extends Resource
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
+    public static function getEloquentQuery(): Builder
+    {
 
+        $user = auth()->user();
+        $id = $user->role_id;
+        // dd(auth()->user()->id);
+        if($id === Role::where('role','Scholar')->first()->id){
+            $announcements = [] ;
+            // ignore error
+            foreach (User::firstWhere('id',$user->id)->announcements()->get() as $value) {
+                $announcements [] = $value->id;
+            }
+            return static::getModel()::whereIn('id',$announcements);
+        }else if($id === Role::where('role','Organization')->first()->id) {
+            // dd(static::getModel()::whereRelation('user','user_id',$user->id)->get());
+            // return static::getModel()::whereRelation('user','user_id',$user->id)->get();
+        }
+
+        return static::getModel()::query();
+    }
     public static function getRelations(): array
     {
         return [
-            RelationManagers\UsersRelationManager::class
+            RelationManagers\UsersRelationManager::class,
+            RelationManagers\RequirementsRelationManager::class
         ];
     }
 

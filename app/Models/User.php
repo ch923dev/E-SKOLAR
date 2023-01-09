@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -102,5 +103,13 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     public function sponsor(): HasOneDeep
     {
         return $this->hasOneDeep(Sponsor::class, [Scholar::class, ScholarshipProgram::class], ['user_id', 'id', 'id'], ['id', 'scholarship_program_id', 'sponsor_id']);
+    }
+    public function requirements() : BelongsToMany
+    {
+        return $this->belongsToMany(Requirement::class);
+    }
+    public function announcements() : BelongsToMany
+    {
+        return $this->belongsToMany(Announcement::class);
     }
 }
