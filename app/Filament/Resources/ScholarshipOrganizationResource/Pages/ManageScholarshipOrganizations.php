@@ -27,6 +27,7 @@ class ManageScholarshipOrganizations extends ManageRecords
                                 ->required(),
                             TextInput::make('abbre')
                                 ->unique()
+                                ->unique()
                                 ->label('Abbreviation')
                                 ->required(),
                         ]),
