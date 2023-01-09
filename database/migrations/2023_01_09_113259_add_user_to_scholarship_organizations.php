@@ -14,10 +14,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('scholarship_organizations', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('abbre');
+        Schema::table('scholarship_organizations', function (Blueprint $table) {
+            $table->foreignIdFor(User::class);
         });
     }
 
@@ -28,6 +26,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('scholarship_organizations');
+        Schema::table('scholarship_organizations', function (Blueprint $table) {
+            //
+        });
     }
 };
