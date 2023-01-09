@@ -19,7 +19,7 @@ class ScholarshipOrganization extends Model
      *
      * @var array
      */
-    protected $fillable = ['name', 'abbre'];
+    protected $fillable = ['name', 'abbre','user_id'];
 
     /**
      * Indicates if the model should be timestamped.
@@ -44,5 +44,9 @@ class ScholarshipOrganization extends Model
             ['scholarship_organization_id', 'id', 'id'],
             ['id', 'scholarship_program_id', 'sponsor_id']
         );
+    }
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }
